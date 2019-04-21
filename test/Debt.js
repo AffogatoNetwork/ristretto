@@ -73,4 +73,52 @@ contract("Debt", accounts => {
       .should.be.equal(web3.utils.toWei("0", "ether"), "stake should be 0");
     Number(finalBalance).should.be.above(Number(initialBalance));
   });
+
+  it("Allows stakers to endorse users", async () => {
+    const receipt = await this.debtInstance.endorseUser(accounts[2], {
+      from: accounts[1]
+    });
+    receipt.logs.length.should.be.equal(1, "trigger one event");
+    receipt.logs[0].event.should.be.equal(
+      "LogEndorse",
+      "should be the LogEndorses event"
+    );
+    receipt.logs[0].args._staker.should.be.equal(
+      accounts[1],
+      "logs the staker address"
+    );
+    receipt.logs[0].args._endorsed.should.be.equal(
+      accounts[2],
+      "logs the endorsed address"
+    );
+    const endorsement = await this.debtInstance.endorsements(
+      accounts[1],
+      accounts[2]
+    );
+    endorsement.should.be.true;
+  });
+
+  it("Allows stakers to remove endorsed users", async () => {
+    const receipt = await this.debtInstance.declineEndorsement(accounts[2], {
+      from: accounts[1]
+    });
+    receipt.logs.length.should.be.equal(1, "trigger one event");
+    receipt.logs[0].event.should.be.equal(
+      "LogDeclineEndorsement",
+      "should be the LogDeclineEndorsement event"
+    );
+    receipt.logs[0].args._staker.should.be.equal(
+      accounts[1],
+      "logs the staker address"
+    );
+    receipt.logs[0].args._declined.should.be.equal(
+      accounts[2],
+      "logs the declined address"
+    );
+    const endorsement = await this.debtInstance.endorsements(
+      accounts[1],
+      accounts[2]
+    );
+    endorsement.should.be.false;
+  });
 });

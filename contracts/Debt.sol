@@ -15,7 +15,18 @@ contract Debt {
     uint256 _amount
   );
 
+  event LogEndorse(
+    address _staker,
+    address _endorsed
+  );
+
+  event LogDeclineEndorsement(
+    address _staker,
+    address _declined
+  );
+
   mapping (address => uint256) public stakedAmount;
+  mapping (address => mapping( address => bool)) public endorsements;
 
   function getStakedAmount() public view returns(uint256){
     return stakedAmount[msg.sender];
@@ -30,6 +41,16 @@ contract Debt {
     stakedAmount[msg.sender] = stakedAmount[msg.sender].sub(_amount);
     msg.sender.transfer(_amount);
     emit LogWithdrawStakeMoney(msg.sender, _amount);
+  }
+
+  function endorseUser(address _endorsed) public{
+    endorsements[msg.sender][_endorsed] = true;
+    emit LogEndorse(msg.sender, _endorsed);
+  }
+
+  function declineEndorsement(address _endorsed) public{
+    endorsements[msg.sender][_endorsed] = false;
+    emit LogDeclineEndorsement(msg.sender, _endorsed);
   }
 
 }
