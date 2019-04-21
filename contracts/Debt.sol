@@ -17,7 +17,8 @@ contract Debt {
 
   event LogEndorse(
     address _staker,
-    address _endorsed
+    address _endorsed,
+    uint256 _amount
   );
 
   event LogDeclineEndorsement(
@@ -27,6 +28,9 @@ contract Debt {
 
   mapping (address => uint256) public stakedAmount;
   mapping (address => mapping( address => bool)) public endorsements;
+  mapping (address => uint256) public endorsedStake;
+  mapping (address => uint256) public availableToEndorse;
+  mapping (address => mapping( address => uint256)) public userToEndorsedStake;
 
   function getStakedAmount() public view returns(uint256){
     return stakedAmount[msg.sender];
@@ -34,22 +38,31 @@ contract Debt {
  
   function stakeMoney() public payable {
     stakedAmount[msg.sender] = stakedAmount[msg.sender].add(msg.value);
+    availableToEndorse[msg.sender] = availableToEndorse[msg.sender].add(msg.value);
     emit LogStakeMoney(msg.sender, msg.value);
   }
 
   function withdrawStakeMoney(uint256 _amount) public {
     stakedAmount[msg.sender] = stakedAmount[msg.sender].sub(_amount);
+    availableToEndorse[msg.sender] = availableToEndorse[msg.sender].sub(_amount);
     msg.sender.transfer(_amount);
     emit LogWithdrawStakeMoney(msg.sender, _amount);
   }
 
-  function endorseUser(address _endorsed) public{
+  function endorseUser(address _endorsed, uint256 _amount) public{
+    require(availableToEndorse[msg.sender] >= _amount, "not enough stake");
     endorsements[msg.sender][_endorsed] = true;
-    emit LogEndorse(msg.sender, _endorsed);
+    availableToEndorse[msg.sender] = availableToEndorse[msg.sender].sub(_amount);
+    endorsedStake[_endorsed] = endorsedStake[_endorsed].add(_amount);
+    userToEndorsedStake[msg.sender][_endorsed] = userToEndorsedStake[msg.sender][_endorsed].add(_amount);
+    emit LogEndorse(msg.sender, _endorsed, _amount);
   }
 
   function declineEndorsement(address _endorsed) public{
     endorsements[msg.sender][_endorsed] = false;
+    availableToEndorse[msg.sender] = availableToEndorse[msg.sender].add(userToEndorsedStake[msg.sender][_endorsed]);
+    endorsedStake[_endorsed] = endorsedStake[_endorsed].sub(userToEndorsedStake[msg.sender][_endorsed]);
+    userToEndorsedStake[msg.sender][_endorsed] = 0;
     emit LogDeclineEndorsement(msg.sender, _endorsed);
   }
 
