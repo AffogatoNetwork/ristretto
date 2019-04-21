@@ -35,9 +35,7 @@ contract("Debt", accounts => {
         "logs the staked amount"
       );
     const finalBalance = await web3.eth.getBalance(accounts[1]);
-    let amountStaked = await this.debtInstance.getStakedAmount({
-      from: accounts[1]
-    });
+    let amountStaked = await this.debtInstance.getStakedAmount(accounts[1]);
     web3.utils
       .fromWei(amountStaked, "wei")
       .should.be.equal(
@@ -58,7 +56,7 @@ contract("Debt", accounts => {
 
   it("...should retrieve stake.", async () => {
     const initialBalance = await web3.eth.getBalance(accounts[1]);
-    const amount = web3.utils.toWei("1", "ether");
+    let amount = web3.utils.toWei("1", "ether");
     const receipt = await this.debtInstance.withdrawStakeMoney(amount, {
       from: accounts[1]
     });
@@ -78,9 +76,7 @@ contract("Debt", accounts => {
         "logs the withdraw amount"
       );
     const finalBalance = await web3.eth.getBalance(accounts[1]);
-    let amountStaked = await this.debtInstance.getStakedAmount({
-      from: accounts[1]
-    });
+    let amountStaked = await this.debtInstance.getStakedAmount(accounts[1]);
     web3.utils
       .fromWei(amountStaked, "wei")
       .should.be.equal(web3.utils.toWei("1", "ether"), "stake should be 1");
@@ -91,6 +87,20 @@ contract("Debt", accounts => {
     web3.utils
       .fromWei(availableToEndorse, "wei")
       .should.be.equal(web3.utils.toWei("1", "ether"), "stake should be 1");
+    let isException = false;
+    try {
+      amount = web3.utils.toWei("3", "ether");
+      await this.debtInstance.withdrawStakeMoney(amount, {
+        from: accounts[1]
+      });
+    } catch (err) {
+      isException = true;
+      assert(err.reason === "can't withdraw more than deposit");
+    }
+    expect(isException).to.be.equal(
+      true,
+      "it should revert on not a amount higher than deposit"
+    );
   });
 
   it("... should allows staker to endorse user", async () => {
@@ -155,6 +165,23 @@ contract("Debt", accounts => {
     Number(availableToEndorse).should.equal(0);
   });
 
+  it("... shouldn't allow to withdraw stake if there is endorsement", async () => {
+    let isException = false;
+    try {
+      amount = web3.utils.toWei("1", "ether");
+      await this.debtInstance.withdrawStakeMoney(amount, {
+        from: accounts[1]
+      });
+    } catch (err) {
+      isException = true;
+      assert(err.reason === "can't withdraw endorsed money");
+    }
+    expect(isException).to.be.equal(
+      true,
+      "it should revert on withdraw endorsed money"
+    );
+  });
+
   it("... should allow staker to remove endorsed user", async () => {
     const receipt = await this.debtInstance.declineEndorsement(accounts[2], {
       from: accounts[1]
@@ -203,5 +230,37 @@ contract("Debt", accounts => {
         web3.utils.toWei("1", "ether"),
         "Available to endorse should be 1"
       );
+  });
+
+  it("... should allow user to request a lending", async () => {
+    const amount = web3.utils.toWei("1", "ether");
+    await this.debtInstance.stakeMoney({
+      from: accounts[3],
+      value: web3.utils.toWei("2", "ether")
+    });
+    await this.debtInstance.endorseUser(accounts[2], amount, {
+      from: accounts[1]
+    });
+    await this.debtInstance.endorseUser(accounts[2], amount, {
+      from: accounts[3]
+    });
+    const receipt = await this.debtInstance.requestLending(amount, {
+      from: accounts[2]
+    });
+    receipt.logs.length.should.be.equal(1, "trigger one event");
+    receipt.logs[0].event.should.be.equal(
+      "LogRequestLending",
+      "should be the LogRequestLending event"
+    );
+    receipt.logs[0].args._requester.should.be.equal(
+      accounts[2],
+      "logs the requester address"
+    );
+    web3.utils
+      .fromWei(receipt.logs[0].args._amount, "wei")
+      .should.be.equal(amount, "logs the amount requested");
+    //Lock stacked ether
+    //Removes amount available
+    //Creates a request for lending
   });
 });
