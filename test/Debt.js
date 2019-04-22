@@ -146,6 +146,19 @@ contract("Debt", accounts => {
         web3.utils.toWei("1", "ether"),
         "Equal to endorsed of staker"
       );
+    const endorserToUserStake = await this.debtInstance.endorserToUserStake(
+      accounts[2],
+      accounts[1]
+    );
+    web3.utils
+      .fromWei(endorserToUserStake, "wei")
+      .should.be.equal(
+        web3.utils.toWei("1", "ether"),
+        "Equal to endorsed of staker"
+      );
+    const userEndorsers = await this.debtInstance.getUserEndorsers(accounts[2]);
+    userEndorsers.length.should.equal(1, "There must be an user in the array");
+    userEndorsers[0].should.be.equal(accounts[1]);
     let isException = false;
     try {
       await this.debtInstance.endorseUser(accounts[2], amount, {
@@ -230,10 +243,15 @@ contract("Debt", accounts => {
         web3.utils.toWei("1", "ether"),
         "Available to endorse should be 1"
       );
+    const userEndorsers = await this.debtInstance.getUserEndorsers(accounts[2]);
+    userEndorsers[0].should.equal(
+      "0x0000000000000000000000000000000000000000",
+      "There musn't be an user in the array"
+    );
   });
 
   it("... should allow user to request a lending", async () => {
-    const amount = web3.utils.toWei("1", "ether");
+    let amount = web3.utils.toWei("1", "ether");
     await this.debtInstance.stakeMoney({
       from: accounts[3],
       value: web3.utils.toWei("2", "ether")
@@ -244,7 +262,7 @@ contract("Debt", accounts => {
     await this.debtInstance.endorseUser(accounts[2], amount, {
       from: accounts[3]
     });
-    const receipt = await this.debtInstance.requestLending(amount, {
+    const receipt = await this.debtInstance.requestLending({
       from: accounts[2]
     });
     receipt.logs.length.should.be.equal(1, "trigger one event");
@@ -259,8 +277,21 @@ contract("Debt", accounts => {
     web3.utils
       .fromWei(receipt.logs[0].args._amount, "wei")
       .should.be.equal(amount, "logs the amount requested");
-    //Lock stacked ether
-    //Removes amount available
     //Creates a request for lending
+  });
+
+  it("... shouldn't allow to decline endorse if there is a lending request active", async () => {
+    let isException = false;
+    try {
+      await this.debtInstance.declineEndorsement(accounts[2], {
+        from: accounts[1]
+      });
+    } catch (err) {
+      isException = true;
+    }
+    expect(isException).to.be.equal(
+      true,
+      "it should revert on decline of lending user"
+    );
   });
 });
