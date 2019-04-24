@@ -44,43 +44,63 @@ contract Debt {
     string status; //pending, accepted, completed
   }
 
-  /** @dev mapping of users and it's staked amount */ 
-  mapping (address => uint256) public stakedAmount; 
-  /** @dev mapping of users endorsed by an user */ 
-  mapping (address => mapping( address => bool)) public endorsements;
-  /** @dev mapping of stake endorsed money available used for request lending */ 
-  mapping (address => uint256) public endorsedStake;
-  /** @dev mapping of stake money of a user available to endorse to another user */ 
-  mapping (address => uint256) public availableToEndorse;
-  /** @dev mapping of money endorsed from an user to an endorsed user */ 
-  mapping (address => mapping( address => uint256)) public userToEndorsedStake;
-  /** @dev mapping of money endorsed from an user to another */ 
-  mapping (address => mapping( address => uint256)) public endorserToUserStake;
-  /** @dev mapping of an array of users endorsing another user */ 
-  mapping (address => address[]) public userEndorsers;
+  /** @dev struct of user */ 
+  struct user{
+    uint256 stakedAmount;
+    mapping( address => bool) endorsements;
+    uint256 availableToEndorse;
+    mapping( address => uint256) userToEndorsedStake;
+  }
+
+  /** @dev struct of debtor */ 
+  struct debtor{
+    uint256 endorsedStake;
+    mapping( address => uint256) endorserToUserStake;
+    address[] userEndorsers;
+  }
+
+  mapping (address => debtStruct) public debts;
+  mapping (address => user) public lenders;
+  mapping (address => debtor) public debtors;
 
   /** @notice Gets the amount stacked by an user.
-    * @param _staker address of the staker.
+    * @param _lender address of the lender.
     * @return staked amount.
     */
-  function getStakedAmount(address _staker) public view returns(uint256){
-    return stakedAmount[_staker];
+  function getLender(address _lender) public view 
+  returns(
+    uint256,
+    uint256
+  ){
+    return(
+      lenders[_lender].stakedAmount,
+      lenders[_lender].availableToEndorse
+    );
+
+  }
+
+  /** @notice Gets the amount stacked by an user.
+    * @param _lender address of the lender.
+    * @return staked amount.
+    */
+  function getStakedAmount(address _lender) public view returns(uint256){
+    return lenders[_lender].stakedAmount;
   }
 
   /** @notice Gets the array of addresses that endorsed an user.
-    * @param _owner address of the owner.
+    * @param _debtor address of the debtor.
     * @return array of addresses.
     */
-  function getUserEndorsers(address _owner) public view returns(address[] memory){
-    return userEndorsers[_owner];
+  function getUserEndorsers(address _debtor) public view returns(address[] memory){
+    return debtors[_debtor].userEndorsers;
   }
  
   /** @notice Stakes money into the contract.
     * @dev increase the amount staked and the amount available to endorse.
     */
   function stakeMoney() public payable {
-    stakedAmount[msg.sender] = stakedAmount[msg.sender].add(msg.value);
-    availableToEndorse[msg.sender] = availableToEndorse[msg.sender].add(msg.value);
+    lenders[msg.sender].stakedAmount = lenders[msg.sender].stakedAmount.add(msg.value);
+    lenders[msg.sender].availableToEndorse = lenders[msg.sender].availableToEndorse.add(msg.value);
     emit LogStakeMoney(msg.sender, msg.value);
   }
 
@@ -90,10 +110,10 @@ contract Debt {
     */
   function withdrawStakeMoney(uint256 _amount) public {
     //require to not have a debt in progress
-    require(stakedAmount[msg.sender] >= _amount, "can't withdraw more than deposit");
-    require(availableToEndorse[msg.sender] >= _amount, "can't withdraw endorsed money");
-    stakedAmount[msg.sender] = stakedAmount[msg.sender].sub(_amount);
-    availableToEndorse[msg.sender] = availableToEndorse[msg.sender].sub(_amount);
+    require(lenders[msg.sender].stakedAmount >= _amount, "can't withdraw more than deposit");
+    require(lenders[msg.sender].availableToEndorse >= _amount, "can't withdraw endorsed money");
+    lenders[msg.sender].stakedAmount = lenders[msg.sender].stakedAmount.sub(_amount);
+    lenders[msg.sender].availableToEndorse = lenders[msg.sender].availableToEndorse.sub(_amount);
     msg.sender.transfer(_amount);
     emit LogWithdrawStakeMoney(msg.sender, _amount);
   }
@@ -104,13 +124,13 @@ contract Debt {
     * @dev the user needs to have stake available to endorse.
     */
   function endorseUser(address _endorsed, uint256 _amount) public {
-    require(availableToEndorse[msg.sender] >= _amount, "not enough stake");
-    endorsements[msg.sender][_endorsed] = true;
-    availableToEndorse[msg.sender] = availableToEndorse[msg.sender].sub(_amount);
-    endorsedStake[_endorsed] = endorsedStake[_endorsed].add(_amount);
-    userToEndorsedStake[msg.sender][_endorsed] = userToEndorsedStake[msg.sender][_endorsed].add(_amount);
-    endorserToUserStake[_endorsed][msg.sender] = endorserToUserStake[_endorsed][msg.sender].add(_amount);
-    userEndorsers[_endorsed].push(msg.sender);
+    require(lenders[msg.sender].availableToEndorse >= _amount, "not enough stake");
+    lenders[msg.sender].endorsements[_endorsed] = true;
+    lenders[msg.sender].availableToEndorse = lenders[msg.sender].availableToEndorse.sub(_amount);
+    debtors[_endorsed].endorsedStake = debtors[_endorsed].endorsedStake.add(_amount);
+    lenders[msg.sender].userToEndorsedStake[_endorsed] = lenders[msg.sender].userToEndorsedStake[_endorsed].add(_amount);
+    debtors[_endorsed].endorserToUserStake[msg.sender] = debtors[_endorsed].endorserToUserStake[msg.sender].add(_amount);
+    debtors[_endorsed].userEndorsers.push(msg.sender);
     emit LogEndorse(msg.sender, _endorsed, _amount);
   }
 
@@ -120,12 +140,12 @@ contract Debt {
     */
   function declineEndorsement(address _endorsed) public {
     //require to not have a debt in progress
-    endorsements[msg.sender][_endorsed] = false;
-    availableToEndorse[msg.sender] = availableToEndorse[msg.sender].add(userToEndorsedStake[msg.sender][_endorsed]);
-    endorsedStake[_endorsed] = endorsedStake[_endorsed].sub(userToEndorsedStake[msg.sender][_endorsed]);
-    userToEndorsedStake[msg.sender][_endorsed] = 0;
-    for (uint i = 0; i < userEndorsers[_endorsed].length; i++){
-      delete userEndorsers[_endorsed][i];
+    lenders[msg.sender].endorsements[_endorsed] = false;
+    lenders[msg.sender].availableToEndorse = lenders[msg.sender].availableToEndorse.add(lenders[msg.sender].userToEndorsedStake[_endorsed]);
+    debtors[_endorsed].endorsedStake = debtors[_endorsed].endorsedStake.sub(lenders[msg.sender].userToEndorsedStake[_endorsed]);
+    lenders[msg.sender].userToEndorsedStake[_endorsed] = 0;
+    for (uint i = 0; i < debtors[_endorsed].userEndorsers.length; i++){
+      delete debtors[_endorsed].userEndorsers[i];
     }
     emit LogDeclineEndorsement(msg.sender, _endorsed);
   }
@@ -134,9 +154,10 @@ contract Debt {
     * @dev Locks the endorsed money for a time, if there is no lending cancel the request. The requester can only request half of what is endorsed.
     */
   function requestLending() public {
-    uint256 amount = endorsedStake[msg.sender];
-    endorsedStake[msg.sender] = endorsedStake[msg.sender].sub(amount);
+    uint256 amount = debtors[msg.sender].endorsedStake;
+    debtors[msg.sender].endorsedStake = debtors[msg.sender].endorsedStake.sub(amount);
     //crear objeto con div(2)
+    //al pagar multiplicar por 2
     emit LogRequestLending(msg.sender, amount.div(2));
   }
 }

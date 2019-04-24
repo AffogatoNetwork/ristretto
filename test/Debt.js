@@ -10,9 +10,8 @@ contract("Debt", accounts => {
   });
 
   it("...should stake money.", async () => {
-    let initialAvailable = await this.debtInstance.availableToEndorse(
-      accounts[1]
-    );
+    let initialAvailable = await this.debtInstance.getLender(accounts[1]);
+    console.log(initialAvailable);
     Number(initialAvailable).should.equal(0);
     const initialBalance = await web3.eth.getBalance(accounts[1]);
     const receipt = await this.debtInstance.stakeMoney({
