@@ -41,7 +41,7 @@ contract Debt {
     address debtor;
     uint256 amount;
     address lender;
-    string status; //pending, accepted, completed
+    string status; //started, accepted, completed
   }
 
   /** @dev mapping of users and it's staked amount */ 
@@ -58,6 +58,8 @@ contract Debt {
   mapping (address => mapping( address => uint256)) public endorserToUserStake;
   /** @dev mapping of an array of users endorsing another user */ 
   mapping (address => address[]) public userEndorsers;
+  /** @dev mapping of an array of users endorsing another user */ 
+  mapping (address => debtStruct) public debts;
 
   /** @notice Gets the amount stacked by an user.
     * @param _staker address of the staker.
@@ -74,7 +76,7 @@ contract Debt {
   function getUserEndorsers(address _owner) public view returns(address[] memory){
     return userEndorsers[_owner];
   }
- 
+
   /** @notice Stakes money into the contract.
     * @dev increase the amount staked and the amount available to endorse.
     */
@@ -136,7 +138,7 @@ contract Debt {
   function requestLending() public {
     uint256 amount = endorsedStake[msg.sender];
     endorsedStake[msg.sender] = endorsedStake[msg.sender].sub(amount);
-    //crear objeto con div(2)
+    debts[msg.sender] = debtStruct(msg.sender, amount.div(2), address(0), "started");
     emit LogRequestLending(msg.sender, amount.div(2));
   }
 }

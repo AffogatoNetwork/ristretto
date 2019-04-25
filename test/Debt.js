@@ -278,6 +278,16 @@ contract("Debt", accounts => {
       .fromWei(receipt.logs[0].args._amount, "wei")
       .should.be.equal(amount, "logs the amount requested");
     //Creates a request for lending
+    const debt = await this.debtInstance.debts(accounts[2]);
+    debt.status.should.equal("started", "The debt started");
+    debt.debtor.should.equal(accounts[2], "Debtor should be the requester");
+    debt.lender.should.equal(
+      "0x0000000000000000000000000000000000000000",
+      "Lender should be empty"
+    );
+    web3.utils
+      .fromWei(debt.amount, "wei")
+      .should.be.equal(amount, "Requested amount should be 1");
   });
 
   it("... shouldn't allow to decline endorse if there is a lending request active", async () => {
@@ -293,5 +303,13 @@ contract("Debt", accounts => {
       true,
       "it should revert on decline of lending user"
     );
+  });
+
+  it("... should allow the lending of money", async () => {
+    // let amount = web3.utils.toWei("1", "ether");
+    // await this.debtInstance.lendMoney({
+    //   from: accounts[3],
+    //   value: web3.utils.toWei("2", "ether")
+    // });
   });
 });
