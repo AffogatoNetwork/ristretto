@@ -10,13 +10,15 @@ class Header extends Component {
     this.state = {
       account: drizzleState.accounts[0],
       hasBalance: false,
-      balance: 0
+      balance: 0,
+      stake: 0
     };
   }
 
   componentDidMount() {
     const { drizzle } = this.props;
     this.hasBalance(drizzle);
+    this.loadStake(drizzle);
   }
 
   async hasBalance(drizzle) {
@@ -24,6 +26,12 @@ class Header extends Component {
     balance = drizzle.web3.utils.fromWei(balance, "ether");
     var hasBalance = balance > 0 ? true : false;
     this.setState({ hasBalance, balance });
+  }
+
+  async loadStake(drizzle){
+    var stake = await drizzle.contracts.Debt.methods.getStakedAmount(this.state.account).call();
+    stake = drizzle.web3.utils.fromWei(stake, "ether");
+    this.setState({ stake: stake });
   }
 
   render() {
@@ -37,10 +45,26 @@ class Header extends Component {
             </span>
           </Link>
         </NavItem>
+
+        <NavItem className="ml-2 mr-4 mt-4 pt-1 text-left ">
+          <Link href="/endorsers/">
+            <span>
+              <Icon name="Users" size="20" className="mr-1" />
+              Endorsers
+            </span>
+          </Link>
+        </NavItem>
+
         <NavItem className="ml-2 mr-4 mt-4 pt-1 text-left ">
           <Link href="#">
             <Icon name="AccountBalanceWallet" size="20" className="mr-1" />
             Balance: {this.state.balance} ETH
+          </Link>
+        </NavItem>
+        <NavItem className="ml-2 mr-4 mt-4 pt-1 text-left ">
+          <Link href="#">
+            <Icon name="StakeMoney" size="20" className="mr-1" />
+            Stake: {this.state.stake} ETH
           </Link>
         </NavItem>
         <NavItem className="ml-2 mt-1 text-right ">

@@ -8,6 +8,7 @@ import { ToastMessage } from "rimble-ui";
 import Web3Warning from "./messages/Web3Warning";
 import Loading from "./messages/Loading";
 import Home from "./components/Home";
+import Endosers from "./components/Endorsers";
 
 class App extends Component {
   state = {
@@ -57,6 +58,17 @@ class App extends Component {
               />
             )}
           />
+          <Route
+            exact
+            path="/endorsers/"
+            render={() => (
+              <Endosers
+                drizzle={this.props.drizzle}
+                drizzleState={this.state.drizzleState}
+              />
+            )}
+          />
+
           <ToastMessage.Provider ref={node => (window.toastProvider = node)} />
         </ThemeProvider>
       );
