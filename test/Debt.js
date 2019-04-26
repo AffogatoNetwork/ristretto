@@ -252,6 +252,8 @@ contract("Debt", accounts => {
 
   it("... should allow user to request a lending", async () => {
     let amount = web3.utils.toWei("1", "ether");
+    let debtAmount = web3.utils.toWei("1.05", "ether");
+    let repaidAmount = web3.utils.toWei("0", "ether");
     await this.debtInstance.stakeMoney({
       from: accounts[3],
       value: web3.utils.toWei("2", "ether")
@@ -277,9 +279,9 @@ contract("Debt", accounts => {
     web3.utils
       .fromWei(receipt.logs[0].args._amount, "wei")
       .should.be.equal(amount, "logs the amount requested");
-    //Creates a request for lending
+
     const debt = await this.debtInstance.debts(accounts[2]);
-    debt.status.should.equal("started", "The debt started");
+    debt.status.should.equal("requested", "The debt is requested");
     debt.debtor.should.equal(accounts[2], "Debtor should be the requester");
     debt.lender.should.equal(
       "0x0000000000000000000000000000000000000000",
@@ -288,6 +290,28 @@ contract("Debt", accounts => {
     web3.utils
       .fromWei(debt.amount, "wei")
       .should.be.equal(amount, "Requested amount should be 1");
+    web3.utils
+      .fromWei(debt.debtTotalAmount, "wei")
+      .should.be.equal(
+        debtAmount,
+        "Requested amount should be amount plus 5% "
+      );
+    web3.utils
+      .fromWei(debt.repaidAmount, "wei")
+      .should.be.equal(repaidAmount, "Requested amount should be 0");
+    isException = false;
+    try {
+      await this.debtInstance.requestLending({
+        from: accounts[2]
+      });
+    } catch (err) {
+      isException = true;
+      assert(err.reason === "there shouldn't existe any debt");
+    }
+    expect(isException).to.be.equal(
+      true,
+      "it should revert on decline of lending user"
+    );
   });
 
   it("... shouldn't allow to decline endorse if there is a lending request active", async () => {
@@ -298,6 +322,7 @@ contract("Debt", accounts => {
       });
     } catch (err) {
       isException = true;
+      assert(err.reason === "there shouldn't existe any debt");
     }
     expect(isException).to.be.equal(
       true,
@@ -306,10 +331,116 @@ contract("Debt", accounts => {
   });
 
   it("... should allow the lending of money", async () => {
-    // let amount = web3.utils.toWei("1", "ether");
-    // await this.debtInstance.lendMoney({
-    //   from: accounts[3],
-    //   value: web3.utils.toWei("2", "ether")
-    // });
+    const initialBalance = await web3.eth.getBalance(accounts[2]);
+    let amount = web3.utils.toWei("1", "ether");
+    let amountLess = web3.utils.toWei("0.5", "ether");
+    let amountMore = web3.utils.toWei("2", "ether");
+    let isException = false;
+    try {
+      await this.debtInstance.lendMoney(accounts[2], {
+        from: accounts[4],
+        value: amountLess
+      });
+    } catch (err) {
+      isException = true;
+      assert(err.reason === "amount must equal requested");
+    }
+    expect(isException).to.be.equal(true, "it should revert on less amount");
+    isException = false;
+    try {
+      await this.debtInstance.lendMoney(accounts[2], {
+        from: accounts[4],
+        value: amountMore
+      });
+    } catch (err) {
+      isException = true;
+      assert(err.reason === "amount must equal requested");
+    }
+    expect(isException).to.be.equal(true, "it should revert on more amount");
+    const receipt = await this.debtInstance.lendMoney(accounts[2], {
+      from: accounts[4],
+      value: amount
+    });
+    receipt.logs.length.should.be.equal(1, "trigger one event");
+    receipt.logs[0].event.should.be.equal(
+      "LogLendMoney",
+      "should be the LogLendMoney event"
+    );
+    receipt.logs[0].args._debtor.should.be.equal(
+      accounts[2],
+      "logs the debtor address"
+    );
+    receipt.logs[0].args._lender.should.be.equal(
+      accounts[4],
+      "logs the lender address"
+    );
+    web3.utils
+      .fromWei(receipt.logs[0].args._amount, "wei")
+      .should.be.equal(amount, "logs the amount requested");
+    const debt = await this.debtInstance.debts(accounts[2]);
+    debt.status.should.equal("accepted", "The debt is accepted");
+    isException = false;
+    try {
+      await this.debtInstance.lendMoney(accounts[2], {
+        from: accounts[4],
+        value: amount
+      });
+    } catch (err) {
+      isException = true;
+      assert(err.reason === "debt status should be requested");
+    }
+    expect(isException).to.be.equal(true, "it should revert on wrong status");
+    const finalBalance = await web3.eth.getBalance(accounts[2]);
+    Number(finalBalance).should.be.above(Number(initialBalance));
+  });
+
+  it("... should allow to repay the debt", async () => {
+    let amount = web3.utils.toWei("1", "ether");
+    let pendingAmount = web3.utils.toWei("0.05", "ether");
+
+    const receipt = await this.debtInstance.repayDebt(accounts[2], {
+      from: accounts[2],
+      value: amount
+    });
+    receipt.logs.length.should.be.equal(1, "trigger one event");
+    receipt.logs[0].event.should.be.equal(
+      "LogRepayDebt",
+      "should be the LogRepayDebt event"
+    );
+    receipt.logs[0].args._debtor.should.be.equal(
+      accounts[2],
+      "logs the debtor address"
+    );
+    receipt.logs[0].args._payer.should.be.equal(
+      accounts[2],
+      "logs the payer address"
+    );
+    web3.utils
+      .fromWei(receipt.logs[0].args._amount, "wei")
+      .should.be.equal(amount, "logs the amount repayed");
+    let debt = await this.debtInstance.debts(accounts[2]);
+    web3.utils
+      .fromWei(debt.repaidAmount, "wei")
+      .should.be.equal(amount, "The repaid amount should equal value sent");
+    let isException = false;
+    try {
+      await this.debtInstance.repayDebt(accounts[2], {
+        from: accounts[2],
+        value: amount
+      });
+    } catch (err) {
+      isException = true;
+      assert(err.reason === "can't repay more than debt");
+    }
+    expect(isException).to.be.equal(
+      true,
+      "it should revert on more amount of payment"
+    );
+    await this.debtInstance.repayDebt(accounts[2], {
+      from: accounts[2],
+      value: pendingAmount
+    });
+    debt = await this.debtInstance.debts(accounts[2]);
+    debt.status.should.equal("completed", "Debt should be repaid");
   });
 });

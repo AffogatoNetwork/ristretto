@@ -36,12 +36,28 @@ contract Debt {
     uint256 _amount
   );
 
+  /** @notice Logs when an User lends money. */
+  event LogLendMoney(
+    address _debtor,
+    address _lender,
+    uint256 _amount
+  );
+  
+  /** @notice Logs when an User repays money. */
+  event LogRepayDebt(
+    address _debtor,
+    address _payer,
+    uint256 _amount
+  );
+
   /** @dev struct of debt object */ 
   struct debtStruct{
     address debtor;
     uint256 amount;
     address lender;
-    string status; //started, accepted, completed
+    string status; //requested, accepted, completed
+    uint256 debtTotalAmount; /** @dev amount + 5% */
+    uint256 repaidAmount;
   }
 
   /** @dev mapping of users and it's staked amount */ 
@@ -121,7 +137,7 @@ contract Debt {
     * @dev The user can't have a lending to be declined. The amount endorsed is returned to the staker.
     */
   function declineEndorsement(address _endorsed) public {
-    //require to not have a debt in progress
+    require(keccak256(abi.encodePacked((debts[_endorsed].status))) == keccak256(abi.encodePacked((""))), "there shouldn't existe any debt");
     endorsements[msg.sender][_endorsed] = false;
     availableToEndorse[msg.sender] = availableToEndorse[msg.sender].add(userToEndorsedStake[msg.sender][_endorsed]);
     endorsedStake[_endorsed] = endorsedStake[_endorsed].sub(userToEndorsedStake[msg.sender][_endorsed]);
@@ -136,9 +152,43 @@ contract Debt {
     * @dev Locks the endorsed money for a time, if there is no lending cancel the request. The requester can only request half of what is endorsed.
     */
   function requestLending() public {
-    uint256 amount = endorsedStake[msg.sender];
-    endorsedStake[msg.sender] = endorsedStake[msg.sender].sub(amount);
-    debts[msg.sender] = debtStruct(msg.sender, amount.div(2), address(0), "started");
-    emit LogRequestLending(msg.sender, amount.div(2));
+    require(keccak256(abi.encodePacked((debts[msg.sender].status))) == keccak256(abi.encodePacked((""))), "there shouldn't existe any debt");
+    uint256 amount = endorsedStake[msg.sender].div(2);
+    uint256 percentageAmount =  (amount.mul(5)).div(100);
+    uint256 totalAmount =  percentageAmount.add(amount);
+    endorsedStake[msg.sender] = endorsedStake[msg.sender].sub(endorsedStake[msg.sender]);
+    debts[msg.sender] = debtStruct(msg.sender, amount, address(0), "requested", totalAmount, 0);
+    emit LogRequestLending(msg.sender, amount);
   }
+
+  /** @notice Lends money to the user that requested.
+    * @param _debtor The user that gets the lending.
+    * @dev the user needs to pay what is requested in the debt.
+    */
+  function lendMoney(address payable _debtor) public payable {
+    require(keccak256(abi.encodePacked((debts[_debtor].status))) == keccak256(abi.encodePacked(("requested"))), "debt status should be requested");
+    require(msg.value == debts[_debtor].amount, "amount must equal requested");
+    debtStruct storage debt = debts[_debtor];
+    debt.status = "accepted";
+    _debtor.transfer(msg.value);
+    emit LogLendMoney(_debtor, msg.sender, msg.value);
+  }
+
+  /** @notice Repay debt.
+    * @param _debtor The user that needs to repay.
+    * @dev the user can't repay more that debt.
+    */
+  function repayDebt(address _debtor) public payable {
+    require(keccak256(abi.encodePacked((debts[_debtor].status))) == keccak256(abi.encodePacked(("accepted"))), "debt status should be accepted");
+    require(msg.value.add(debts[_debtor].repaidAmount) <= debts[_debtor].debtTotalAmount, "can't repay more than debt");
+    debtStruct storage debt = debts[_debtor];
+    debt.repaidAmount = debt.repaidAmount.add(msg.value);
+    if(debt.repaidAmount == debt.debtTotalAmount){
+      debt.status = "completed";
+    }
+    emit LogRepayDebt(_debtor, msg.sender, msg.value);
+  }
+
+  //Withdraw earnings
+  //close debt
 }
