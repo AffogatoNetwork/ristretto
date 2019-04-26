@@ -8,11 +8,11 @@ import {
   Input,
   Button,
   Card,
+  OutlineButton
 } from "rimble-ui";
 
-import  { Redirect } from 'react-router-dom'
 
-class RequestLending extends Component {
+class LendMoney extends Component {
 
     constructor(props) {
         super(props);
@@ -21,6 +21,8 @@ class RequestLending extends Component {
 
         this.state = {
           account: drizzleState.accounts[0],
+          debtor: "",
+          amount: 0,
 
           status: "initialized",
           modal: false,
@@ -32,14 +34,19 @@ class RequestLending extends Component {
         this.contracts = props.drizzle.contracts;
         this.drizzle = props.drizzle;
         this.web3 = props.drizzle.web3;
+
         this.onFormSubmit = this.onFormSubmit.bind(this);
-        this.modalToggle = this.modalToggle.bind(this);
+        this.onChangeDebtor = this.onChangeDebtor.bind(this);
+        this.onChangeAmount = this.onChangeAmount.bind(this);
+        //this.modalToggle = this.modalToggle.bind(this);
     }
 
-    modalToggle() {
-        this.setState({
-          modal: !this.state.modal
-        });
+    onChangeDebtor(event) {
+        this.setState({ debtor: event.target.value });
+    }
+
+    onChangeAmount(event) {
+        this.setState({ amount: event.target.value });
     }
 
     componentWillUnmount() {
@@ -66,7 +73,10 @@ class RequestLending extends Component {
                 this.setState({
                   transactionHash: transactionHash,
                   modalPending: false,
+                  debtor: "",
+                  amount: "",
                 });
+                window.location.reload();
               }
 
               if (
@@ -81,18 +91,23 @@ class RequestLending extends Component {
             }
           }
         });
-
     }
 
-    onFormSubmit(event) {
+    async onFormSubmit(event) {
         event.preventDefault();
-        const stackId = this.contracts.Debt.methods.requestLending.cacheSend(
-            {
-                from: this.state.account,
+
+        var amount = this.state.amount;
+        amount = this.drizzle.web3.utils.toWei(amount, "ether");
+
+        const stackId = this.contracts.Debt.methods.lendMoney.cacheSend(
+            this.state.debtor,
+            {from: this.state.account,
+             value: amount
             }
         );
         this.setState({ transactionId: stackId });
     }
+
 
     render() {
         return (
@@ -100,11 +115,34 @@ class RequestLending extends Component {
             <Container className="mt-4">
               <Row className="justify-content-center">
                 <Col lg="6">
+                  <Heading.h2>Lend Money</Heading.h2>
                   <Card className="mt-4 mx-auto">
                     <Form className="form" onSubmit={this.onFormSubmit}>
-                      <center>
-                        <Button type="submit">Request Lending</Button>
-                      </center>
+                      <FormGroup>
+                        <Field label="Debtor Address">
+                          <Input
+                            name="Debtor"
+                            value={this.state.debtor}
+                            onChange={this.onChangeDebtor}
+                            required={true}
+                            width={"100%"}
+                          />
+                        </Field>
+                      </FormGroup>
+                      <FormGroup>
+                        <Field label="Amount to lend">
+                          <Input
+                            name="Amount"
+                            type="number"
+                            value={this.state.amount}
+                            onChange={this.onChangeAmount}
+                            required={true}
+                            width={"100%"}
+                          />
+                        </Field>
+                      </FormGroup>
+
+                      <Button type="submit">Lend Money</Button>
                     </Form>
                   </Card>
                 </Col>
@@ -114,7 +152,7 @@ class RequestLending extends Component {
         );
     }
 
+
 }
 
-
-export default withRouter(RequestLending);
+export default withRouter(LendMoney);
