@@ -379,6 +379,7 @@ contract("Debt", accounts => {
       .should.be.equal(amount, "logs the amount requested");
     const debt = await this.debtInstance.debts(accounts[2]);
     debt.status.should.equal("accepted", "The debt is accepted");
+    debt.lender.should.equal(accounts[4], "The debt lender must be updated");
     isException = false;
     try {
       await this.debtInstance.lendMoney(accounts[2], {
@@ -442,5 +443,95 @@ contract("Debt", accounts => {
     });
     debt = await this.debtInstance.debts(accounts[2]);
     debt.status.should.equal("completed", "Debt should be repaid");
+  });
+
+  it("... should allow to close the debt", async () => {
+    let amount = web3.utils.toWei("0", "ether");
+    const receipt = await this.debtInstance.closeDebt(accounts[2], {
+      from: accounts[2]
+    });
+    receipt.logs.length.should.be.equal(1, "trigger one event");
+    receipt.logs[0].event.should.be.equal(
+      "LogCloseDebt",
+      "should be the LogCloseDebt event"
+    );
+    receipt.logs[0].args._debtor.should.be.equal(
+      accounts[2],
+      "logs the debtor address"
+    );
+    const debt = await this.debtInstance.debts(accounts[2]);
+    debt.status.should.equal("", "The debt is empty");
+    debt.debtor.should.equal(
+      "0x0000000000000000000000000000000000000000",
+      "Debtor should be empty"
+    );
+    debt.lender.should.equal(
+      "0x0000000000000000000000000000000000000000",
+      "Lender should be empty"
+    );
+    web3.utils
+      .fromWei(debt.amount, "wei")
+      .should.be.equal(amount, "Requested amount should be 0");
+    web3.utils
+      .fromWei(debt.debtTotalAmount, "wei")
+      .should.be.equal(amount, "Requested amount should be 0 ");
+    web3.utils
+      .fromWei(debt.repaidAmount, "wei")
+      .should.be.equal(amount, "Requested amount should be 0");
+    let endorsment1 = await this.debtInstance.availableToEndorse(accounts[1]);
+    let endorsment2 = await this.debtInstance.availableToEndorse(accounts[3]);
+    let endorsment3 = await this.debtInstance.availableToEndorse(accounts[4]);
+    web3.utils
+      .fromWei(endorsment1, "wei")
+      .should.be.equal(
+        web3.utils.toWei("1.0125", "ether"),
+        "Should be same as start of endorsment plus interest"
+      );
+    web3.utils
+      .fromWei(endorsment2, "wei")
+      .should.be.equal(
+        web3.utils.toWei("2.0125", "ether"),
+        "Should be same as start of endorsment plus interest"
+      );
+    web3.utils
+      .fromWei(endorsment3, "wei")
+      .should.be.equal(
+        web3.utils.toWei("1.0250", "ether"),
+        "Should be same as start of endorsment plus interest"
+      );
+    let staked1 = await this.debtInstance.getStakedAmount(accounts[1]);
+    web3.utils
+      .fromWei(staked1, "wei")
+      .should.be.equal(
+        web3.utils.toWei("1.0125", "ether"),
+        "Stake should be the same as deposit plus interest"
+      );
+    let staked2 = await this.debtInstance.getStakedAmount(accounts[3]);
+    web3.utils
+      .fromWei(staked2, "wei")
+      .should.be.equal(
+        web3.utils.toWei("2.0125", "ether"),
+        "Stake should be the same as deposit plus interest"
+      );
+    let staked3 = await this.debtInstance.getStakedAmount(accounts[4]);
+    web3.utils
+      .fromWei(staked3, "wei")
+      .should.be.equal(
+        web3.utils.toWei("1.0250", "ether"),
+        "Stake should be the same as deposit plus interest"
+      );
+    let isException = false;
+    try {
+      await this.debtInstance.closeDebt(accounts[2], {
+        from: accounts[2]
+      });
+    } catch (err) {
+      isException = true;
+      assert(err.reason === "debt must be completed");
+    }
+    expect(isException).to.be.equal(
+      true,
+      "it should revert on debt not completed"
+    );
   });
 });

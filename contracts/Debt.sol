@@ -50,6 +50,11 @@ contract Debt {
     uint256 _amount
   );
 
+  /** @notice Logs closing the Debt. */
+  event LogCloseDebt(
+    address _debtor
+  );
+
   /** @dev struct of debt object */ 
   struct debtStruct{
     address debtor;
@@ -142,6 +147,7 @@ contract Debt {
     availableToEndorse[msg.sender] = availableToEndorse[msg.sender].add(userToEndorsedStake[msg.sender][_endorsed]);
     endorsedStake[_endorsed] = endorsedStake[_endorsed].sub(userToEndorsedStake[msg.sender][_endorsed]);
     userToEndorsedStake[msg.sender][_endorsed] = 0;
+    endorserToUserStake[_endorsed][msg.sender] = 0;
     for (uint i = 0; i < userEndorsers[_endorsed].length; i++){
       delete userEndorsers[_endorsed][i];
     }
@@ -154,9 +160,9 @@ contract Debt {
   function requestLending() public {
     require(keccak256(abi.encodePacked((debts[msg.sender].status))) == keccak256(abi.encodePacked((""))), "there shouldn't existe any debt");
     uint256 amount = endorsedStake[msg.sender].div(2);
-    uint256 percentageAmount =  (amount.mul(5)).div(100);
+    uint256 percentageAmount =  (amount.mul(5)).div(100); /** @dev 5% interest rate  */
     uint256 totalAmount =  percentageAmount.add(amount);
-    endorsedStake[msg.sender] = endorsedStake[msg.sender].sub(endorsedStake[msg.sender]);
+    endorsedStake[msg.sender] = 0;
     debts[msg.sender] = debtStruct(msg.sender, amount, address(0), "requested", totalAmount, 0);
     emit LogRequestLending(msg.sender, amount);
   }
@@ -170,6 +176,7 @@ contract Debt {
     require(msg.value == debts[_debtor].amount, "amount must equal requested");
     debtStruct storage debt = debts[_debtor];
     debt.status = "accepted";
+    debt.lender = msg.sender;
     _debtor.transfer(msg.value);
     emit LogLendMoney(_debtor, msg.sender, msg.value);
   }
@@ -189,6 +196,35 @@ contract Debt {
     emit LogRepayDebt(_debtor, msg.sender, msg.value);
   }
 
-  //Withdraw earnings
-  //close debt
+  /** @notice Close debt.
+    * @param _debtor The user that needs to repay.
+    * @dev the user can't repay more that debt. The lender gets 50% of the interest rate, the stakes get the other 50% according how much did they endorse.
+    */
+  function closeDebt(address _debtor) public {
+     require(keccak256(abi.encodePacked((debts[_debtor].status))) == keccak256(abi.encodePacked(("completed"))), "debt must be completed");
+    uint256 amount = debts[_debtor].amount;
+    uint256 totalDebtAmount = debts[_debtor].debtTotalAmount;
+    uint256 totalAmount = debts[_debtor].amount.mul(2);
+    uint256 totalLender = (totalDebtAmount.sub(amount)).div(2);
+    uint256 totalRepayment = totalLender.add(debts[_debtor].amount);
+    stakedAmount[debts[_debtor].lender] = totalRepayment;
+    availableToEndorse[debts[_debtor].lender] = totalRepayment;
+    debtStruct storage debt = debts[_debtor];
+    debt.status = "";
+    debt.lender = address(0);
+    debt.debtor = address(0);
+    debt.amount = 0;
+    debt.debtTotalAmount = 0;
+    debt.repaidAmount = 0;
+     for (uint i = 0; i < userEndorsers[_debtor].length; i++){
+      if(userEndorsers[_debtor][i] != address(0)){
+        address currentUser = userEndorsers[_debtor][i];
+        uint256 totalStaker = totalLender.mul(endorserToUserStake[_debtor][currentUser]).div(totalAmount);
+        availableToEndorse[currentUser] = availableToEndorse[currentUser].add(endorserToUserStake[_debtor][currentUser]).add(totalStaker);
+        stakedAmount[currentUser] = stakedAmount[currentUser].add(totalStaker);
+      }
+    }
+    emit LogCloseDebt(_debtor);
+  }
+ //TODO: timelock
 }
