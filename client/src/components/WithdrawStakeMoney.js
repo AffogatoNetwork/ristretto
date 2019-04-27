@@ -75,6 +75,7 @@ class WithdrawStakeMoney extends Component {
                   modalPending: false,
                   amount: 0,
                 });
+                window.location.reload();
               }
               if (
                 drizzleState.transactions[transactionHash].status == "success" &&

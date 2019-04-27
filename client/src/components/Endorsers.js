@@ -6,6 +6,15 @@ import { Container, Col, Row, Form, FormGroup } from "reactstrap";
 import { Heading } from "rimble-ui";
 
 
+const TableRow = ({row}) => (
+  <tr>
+    <td key={row.name}>{row.name}</td>
+    <td key={row.id}>{row.id}</td>
+    <td key={row.price}>{row.price}</td>
+  </tr>
+)
+
+
 class Endorsers extends Component {
 
     constructor(props) {
@@ -39,15 +48,15 @@ class Endorsers extends Component {
         this.setState({ endorsers: endorsers });
     }
 
-    createList = () => {
+    createTable = () => {
         let list = []
 
         for (let i = 0; i < this.state.endorsers.length; i++) {
-          list.push(<Heading.h4>
+          list.push(<tr><td>
             {
                 this.state.endorsers[i]
             }
-          </Heading.h4>)
+          </td></tr>)
         }
 
         return list;
@@ -55,12 +64,21 @@ class Endorsers extends Component {
 
 
     render() {
+        const endorsers = this.state.endorsers;
+
         return (
             <>
               <Container className="mt-4">
-                <Row className="justify-content-center">
-                    {this.createList() }
-                </Row>
+                <table>
+                    <thead>
+                      <tr>
+                        <th>Accounts</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        { this.createTable() }
+                    </tbody>
+                </table>
               </Container>
             </>
         );

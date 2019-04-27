@@ -45,7 +45,14 @@ class Header extends Component {
             </span>
           </Link>
         </NavItem>
-
+        <NavItem className="ml-2 mr-4 mt-4 pt-1 text-left ">
+          <Link href="/loans/">
+            <span>
+              <Icon name="loan" size="20" className="mr-1" />
+              Loan
+            </span>
+          </Link>
+        </NavItem>
         <NavItem className="ml-2 mr-4 mt-4 pt-1 text-left ">
           <Link href="/endorsers/">
             <span>

@@ -8,11 +8,11 @@ import {
   Input,
   Button,
   Card,
+  OutlineButton
 } from "rimble-ui";
 
-import  { Redirect } from 'react-router-dom'
 
-class StakeMoney extends Component {
+class LendMoney extends Component {
 
     constructor(props) {
         super(props);
@@ -21,6 +21,7 @@ class StakeMoney extends Component {
 
         this.state = {
           account: drizzleState.accounts[0],
+          debtor: "",
           amount: 0,
 
           status: "initialized",
@@ -35,18 +36,17 @@ class StakeMoney extends Component {
         this.web3 = props.drizzle.web3;
 
         this.onFormSubmit = this.onFormSubmit.bind(this);
+        this.onChangeDebtor = this.onChangeDebtor.bind(this);
         this.onChangeAmount = this.onChangeAmount.bind(this);
-        this.modalToggle = this.modalToggle.bind(this);
+        //this.modalToggle = this.modalToggle.bind(this);
+    }
+
+    onChangeDebtor(event) {
+        this.setState({ debtor: event.target.value });
     }
 
     onChangeAmount(event) {
         this.setState({ amount: event.target.value });
-    }
-
-    modalToggle() {
-        this.setState({
-          modal: !this.state.modal
-        });
     }
 
     componentWillUnmount() {
@@ -73,6 +73,7 @@ class StakeMoney extends Component {
                 this.setState({
                   transactionHash: transactionHash,
                   modalPending: false,
+                  debtor: "",
                   amount: "",
                 });
                 window.location.reload();
@@ -92,20 +93,21 @@ class StakeMoney extends Component {
         });
     }
 
-    onFormSubmit(event) {
+    async onFormSubmit(event) {
         event.preventDefault();
 
         var amount = this.state.amount;
         amount = this.drizzle.web3.utils.toWei(amount, "ether");
 
-        const stackId = this.contracts.Debt.methods.stakeMoney.cacheSend(
-            {
-                from: this.state.account,
-                value: amount
+        const stackId = this.contracts.Debt.methods.lendMoney.cacheSend(
+            this.state.debtor,
+            {from: this.state.account,
+             value: amount
             }
         );
         this.setState({ transactionId: stackId });
     }
+
 
     render() {
         return (
@@ -113,11 +115,22 @@ class StakeMoney extends Component {
             <Container className="mt-4">
               <Row className="justify-content-center">
                 <Col lg="6">
-                  <Heading.h2>Add Stake</Heading.h2>
+                  <Heading.h2>Lend Money</Heading.h2>
                   <Card className="mt-4 mx-auto">
                     <Form className="form" onSubmit={this.onFormSubmit}>
                       <FormGroup>
-                        <Field label="Amount to add">
+                        <Field label="Debtor Address">
+                          <Input
+                            name="Debtor"
+                            value={this.state.debtor}
+                            onChange={this.onChangeDebtor}
+                            required={true}
+                            width={"100%"}
+                          />
+                        </Field>
+                      </FormGroup>
+                      <FormGroup>
+                        <Field label="Amount to lend">
                           <Input
                             name="Amount"
                             type="number"
@@ -129,7 +142,7 @@ class StakeMoney extends Component {
                         </Field>
                       </FormGroup>
 
-                      <Button type="submit">Add Stake</Button>
+                      <Button type="submit">Lend Money</Button>
                     </Form>
                   </Card>
                 </Col>
@@ -139,7 +152,7 @@ class StakeMoney extends Component {
         );
     }
 
+
 }
 
-
-export default withRouter(StakeMoney);
+export default withRouter(LendMoney);
