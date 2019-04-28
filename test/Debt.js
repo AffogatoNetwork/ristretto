@@ -3,6 +3,8 @@ require("chai").expect;
 var BN = web3.utils.BN;
 require("chai").use(require("chai-bignumber")(BN));
 const Debt = artifacts.require("./Debt.sol");
+const helper = require("../utils/utils.js");
+const SECONDS_IN_DAY = 86400;
 
 contract("Debt", accounts => {
   beforeEach(async () => {
@@ -299,6 +301,9 @@ contract("Debt", accounts => {
     web3.utils
       .fromWei(debt.repaidAmount, "wei")
       .should.be.equal(repaidAmount, "Requested amount should be 0");
+    debt.openingTime
+      .toNumber()
+      .should.be.above(0, "The time should be greater than 0");
     isException = false;
     try {
       await this.debtInstance.requestLending({
@@ -331,6 +336,9 @@ contract("Debt", accounts => {
   });
 
   it("... should allow the lending of money", async () => {
+    await helper.advanceTimeAndBlock(SECONDS_IN_DAY * 1); //advance 1 days
+    let initialDebt = await this.debtInstance.debts(accounts[2]);
+    const initialOpeningTime = initialDebt.openingTime;
     const initialBalance = await web3.eth.getBalance(accounts[2]);
     let amount = web3.utils.toWei("1", "ether");
     let amountLess = web3.utils.toWei("0.5", "ether");
@@ -381,6 +389,12 @@ contract("Debt", accounts => {
     debt.status.should.equal("accepted", "The debt is accepted");
     debt.lender.should.equal(accounts[4], "The debt lender must be updated");
     isException = false;
+    debt.openingTime
+      .toNumber()
+      .should.be.above(
+        initialOpeningTime.toNumber(),
+        "Opening Time should have updated"
+      );
     try {
       await this.debtInstance.lendMoney(accounts[2], {
         from: accounts[4],
@@ -469,6 +483,7 @@ contract("Debt", accounts => {
       "0x0000000000000000000000000000000000000000",
       "Lender should be empty"
     );
+    debt.openingTime.toNumber().should.be.equal(0, "The time should be 0");
     web3.utils
       .fromWei(debt.amount, "wei")
       .should.be.equal(amount, "Requested amount should be 0");
@@ -533,5 +548,58 @@ contract("Debt", accounts => {
       true,
       "it should revert on debt not completed"
     );
+  });
+
+  it("... should allow to close the request if time is greater than 2 months", async () => {
+    //TODO: if is normal just reset, if is accepted slash stack
+    let amount = web3.utils.toWei("0", "ether");
+    await this.debtInstance.requestLending({
+      from: accounts[2]
+    });
+    let isException = false;
+    try {
+      await this.debtInstance.forceCloseDebt(accounts[2], {
+        from: accounts[4]
+      });
+    } catch (err) {
+      isException = true;
+      assert(err.reason === "time must be greater than 2 months");
+    }
+    expect(isException).to.be.equal(
+      true,
+      "it should revert on opening time not greater than 2 months"
+    );
+    await helper.advanceTimeAndBlock(SECONDS_IN_DAY * 61); //advance 61 days
+    const receipt = await this.debtInstance.forceCloseDebt(accounts[2], {
+      from: accounts[4]
+    });
+    receipt.logs.length.should.be.equal(1, "trigger one event");
+    receipt.logs[0].event.should.be.equal(
+      "LogForceCloseDebt",
+      "should be the LogForceCloseDebt event"
+    );
+    receipt.logs[0].args._debtor.should.be.equal(
+      accounts[2],
+      "logs the debtor address"
+    );
+    const debt = await this.debtInstance.debts(accounts[2]);
+    debt.status.should.equal("", "The debt should be empty");
+    debt.debtor.should.equal(
+      "0x0000000000000000000000000000000000000000",
+      "Debtor should be empty"
+    );
+    debt.lender.should.equal(
+      "0x0000000000000000000000000000000000000000",
+      "Lender should be empty"
+    );
+    web3.utils
+      .fromWei(debt.amount, "wei")
+      .should.be.equal(amount, "Requested amount should be 0");
+    web3.utils
+      .fromWei(debt.debtTotalAmount, "wei")
+      .should.be.equal(amount, "Requested amount should be 0 ");
+    web3.utils
+      .fromWei(debt.repaidAmount, "wei")
+      .should.be.equal(amount, "Requested amount should be 0");
   });
 });

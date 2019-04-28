@@ -55,6 +55,11 @@ contract Debt {
     address _debtor
   );
 
+  /** @notice Logs force closed Debt. */
+  event LogForceCloseDebt(
+    address _debtor
+  );
+
   /** @dev struct of debt object */ 
   struct debtStruct{
     address debtor;
@@ -63,6 +68,7 @@ contract Debt {
     string status; //requested, accepted, completed
     uint256 debtTotalAmount; /** @dev amount + 5% */
     uint256 repaidAmount;
+    uint256 openingTime; 
   }
 
   /** @dev mapping of users and it's staked amount */ 
@@ -128,6 +134,7 @@ contract Debt {
     */
   function endorseUser(address _endorsed, uint256 _amount) public {
     require(availableToEndorse[msg.sender] >= _amount, "not enough stake");
+    require(keccak256(abi.encodePacked((debts[msg.sender].status))) == keccak256(abi.encodePacked((""))), "there shouldn't existe any debt");
     endorsements[msg.sender][_endorsed] = true;
     availableToEndorse[msg.sender] = availableToEndorse[msg.sender].sub(_amount);
     endorsedStake[_endorsed] = endorsedStake[_endorsed].add(_amount);
@@ -163,7 +170,7 @@ contract Debt {
     uint256 percentageAmount =  (amount.mul(5)).div(100); /** @dev 5% interest rate  */
     uint256 totalAmount =  percentageAmount.add(amount);
     endorsedStake[msg.sender] = 0;
-    debts[msg.sender] = debtStruct(msg.sender, amount, address(0), "requested", totalAmount, 0);
+    debts[msg.sender] = debtStruct(msg.sender, amount, address(0), "requested", totalAmount, 0, now);
     emit LogRequestLending(msg.sender, amount);
   }
 
@@ -177,6 +184,7 @@ contract Debt {
     debtStruct storage debt = debts[_debtor];
     debt.status = "accepted";
     debt.lender = msg.sender;
+    debt.openingTime = now;
     _debtor.transfer(msg.value);
     emit LogLendMoney(_debtor, msg.sender, msg.value);
   }
@@ -216,6 +224,7 @@ contract Debt {
     debt.amount = 0;
     debt.debtTotalAmount = 0;
     debt.repaidAmount = 0;
+    debt.openingTime = 0;
      for (uint i = 0; i < userEndorsers[_debtor].length; i++){
       if(userEndorsers[_debtor][i] != address(0)){
         address currentUser = userEndorsers[_debtor][i];
@@ -226,5 +235,25 @@ contract Debt {
     }
     emit LogCloseDebt(_debtor);
   }
- //TODO: timelock
+
+  /** @notice Force the liquidation of a debt if time is greater than 2 months.
+    * @param _debtor The user that needs to repay.
+    * @dev Endorsers must pay the debt. The repaid amount is sent back to endorsers. 
+    */
+  function forceCloseDebt(address _debtor) public {
+    require(now >= debts[_debtor].openingTime + 60 days, "time must be greater than 2 months");
+    debtStruct storage debt = debts[_debtor];
+    debt.status = "";
+    debt.lender = address(0);
+    debt.debtor = address(0);
+    debt.amount = 0;
+    debt.debtTotalAmount = 0;
+    debt.repaidAmount = 0;
+    debt.openingTime = 0;
+    if(keccak256(abi.encodePacked((debts[_debtor].status))) == keccak256(abi.encodePacked(("accepted")))){
+      //TODO: Slash stake
+    }
+    emit LogForceCloseDebt(_debtor);
+  } 
+ //Repaid amount goes back to stakers
 }
