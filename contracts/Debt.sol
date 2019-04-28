@@ -225,9 +225,10 @@ contract Debt {
     debt.debtTotalAmount = 0;
     debt.repaidAmount = 0;
     debt.openingTime = 0;
-     for (uint i = 0; i < userEndorsers[_debtor].length; i++){
+    for (uint i = 0; i < userEndorsers[_debtor].length; i++){
       if(userEndorsers[_debtor][i] != address(0)){
         address currentUser = userEndorsers[_debtor][i];
+        endorsedStake[_debtor] = endorsedStake[_debtor].add(endorserToUserStake[_debtor][currentUser]);
         uint256 totalStaker = totalLender.mul(endorserToUserStake[_debtor][currentUser]).div(totalAmount);
         availableToEndorse[currentUser] = availableToEndorse[currentUser].add(endorserToUserStake[_debtor][currentUser]).add(totalStaker);
         stakedAmount[currentUser] = stakedAmount[currentUser].add(totalStaker);
@@ -242,6 +243,7 @@ contract Debt {
     */
   function forceCloseDebt(address _debtor) public {
     require(now >= debts[_debtor].openingTime + 60 days, "time must be greater than 2 months");
+    string memory status = debts[_debtor].status;
     debtStruct storage debt = debts[_debtor];
     debt.status = "";
     debt.lender = address(0);
@@ -250,9 +252,17 @@ contract Debt {
     debt.debtTotalAmount = 0;
     debt.repaidAmount = 0;
     debt.openingTime = 0;
-    if(keccak256(abi.encodePacked((debts[_debtor].status))) == keccak256(abi.encodePacked(("accepted")))){
+    if(keccak256(abi.encodePacked((status))) == keccak256(abi.encodePacked(("requested")))){
+      for (uint i = 0; i < userEndorsers[_debtor].length; i++){
+        if(userEndorsers[_debtor][i] != address(0)){
+          address currentUser = userEndorsers[_debtor][i];
+          endorsedStake[_debtor] = endorsedStake[_debtor].add(endorserToUserStake[_debtor][currentUser]);
+          availableToEndorse[currentUser] = availableToEndorse[currentUser].add(endorserToUserStake[_debtor][currentUser]);
+        }
+      }
+    }else{
       //TODO: Slash stake
-    }
+    } 
     emit LogForceCloseDebt(_debtor);
   } 
  //Repaid amount goes back to stakers

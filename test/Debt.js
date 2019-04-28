@@ -535,6 +535,13 @@ contract("Debt", accounts => {
         web3.utils.toWei("1.0250", "ether"),
         "Stake should be the same as deposit plus interest"
       );
+    const endorsedStake = await this.debtInstance.endorsedStake(accounts[2]);
+    web3.utils
+      .fromWei(endorsedStake, "wei")
+      .should.be.equal(
+        web3.utils.toWei("2", "ether"),
+        "Equal to endorsed of staker"
+      );
     let isException = false;
     try {
       await this.debtInstance.closeDebt(accounts[2], {
@@ -551,7 +558,7 @@ contract("Debt", accounts => {
   });
 
   it("... should allow to close the request if time is greater than 2 months", async () => {
-    //TODO: if is normal just reset, if is accepted slash stack
+    //TODO: if is normal just reset
     let amount = web3.utils.toWei("0", "ether");
     await this.debtInstance.requestLending({
       from: accounts[2]
@@ -601,5 +608,25 @@ contract("Debt", accounts => {
     web3.utils
       .fromWei(debt.repaidAmount, "wei")
       .should.be.equal(amount, "Requested amount should be 0");
+    const endorsedStake = await this.debtInstance.endorsedStake(accounts[2]);
+    web3.utils
+      .fromWei(endorsedStake, "wei")
+      .should.be.equal(
+        web3.utils.toWei("2", "ether"),
+        "Equal to endorsed of staker"
+      );
+  });
+
+  it("... should allow repay to lender if it hasn't paid", async () => {
+    let amount = web3.utils.toWei("1", "ether");
+    const receipt = await this.debtInstance.requestLending({
+      from: accounts[2]
+    });
+    const debt = await this.debtInstance.debts(accounts[2]);
+    await helper.advanceTimeAndBlock(SECONDS_IN_DAY * 1); //advance 1 days
+    await this.debtInstance.lendMoney(accounts[2], {
+      from: accounts[4],
+      value: amount
+    });
   });
 });
