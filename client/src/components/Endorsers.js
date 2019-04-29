@@ -24,6 +24,7 @@ class Endorsers extends Component {
         this.state = {
           account: drizzleState.accounts[0],
           endorsers: "",
+          endorsedAmounts: [],
           status: "initialized",
           modal: false,
           transactionHash: "",
@@ -44,19 +45,33 @@ class Endorsers extends Component {
     }
 
     async loadEndorsers(drizzle){
+        let amounts = [];
         var endorsers = await drizzle.contracts.Debt.methods.getUserEndorsers(this.state.account).call();
         this.setState({ endorsers: endorsers });
+
+        for (let i = 0; i < this.state.endorsers.length; i++) {
+            this.contracts.Debt.methods.userToEndorsedStake(this.state.endorsers[i], this.state.account).call({'from': this.state.account})
+            .then((result) => {
+                amounts.push(this.drizzle.web3.utils.fromWei(result, "ether"));
+                this.setState({ endorsedAmounts: amounts });
+            });
+        }
     }
 
     createTable = () => {
-        let list = []
+        let list = [];
 
-        for (let i = 0; i < this.state.endorsers.length; i++) {
-          list.push(<tr><td>
-            {
-                this.state.endorsers[i]
+        if (this.state.endorsers != null){
+            for (let i = 0; i < this.state.endorsers.length; i++) {
+              list.push(<tr>
+                            <td>
+                                {this.state.endorsedAmounts[i]} ETH
+                            </td>
+                            <td>
+                                {this.state.endorsers[i]}
+                            </td>
+                        </tr>)
             }
-          </td></tr>)
         }
 
         return list;
@@ -72,7 +87,8 @@ class Endorsers extends Component {
                 <table>
                     <thead>
                       <tr>
-                        <th>Accounts</th>
+                        <th>Amount</th>
+                        <th><p align="center">Accounts</p></th>
                       </tr>
                     </thead>
                     <tbody>

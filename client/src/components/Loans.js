@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import RequestLending from "./RequestLending";
 import LendMoney from "./LendMoney";
 import RepayDebt from "./RepayDebt";
-import Debts from "./Debts";
+import CloseDebt from "./CloseDebt";
+import ForceCloseDebt from "./ForceCloseDebt";
 
 class Home extends Component {
     render() {
@@ -17,6 +18,14 @@ class Home extends Component {
                   drizzle={this.props.drizzle}
                 />
                 <RepayDebt
+                  drizzleState={this.props.drizzleState}
+                  drizzle={this.props.drizzle}
+                />
+                <CloseDebt
+                  drizzleState={this.props.drizzleState}
+                  drizzle={this.props.drizzle}
+                />
+                <ForceCloseDebt
                   drizzleState={this.props.drizzleState}
                   drizzle={this.props.drizzle}
                 />

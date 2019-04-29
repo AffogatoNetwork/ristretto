@@ -2,19 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="687c92e1-07c6-4bf6-85d8-4b82f336619d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/client/src/components/Debts.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/components/LendMoney.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/components/RepayDebt.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/components/CloseDebt.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/components/ForceCloseDebt.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/Debts.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Debts.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/Endorsers.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Endorsers.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Header.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Header.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/Loans.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Loans.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/RequestLending.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/RequestLending.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/contracts/Debt.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/contracts/Migrations.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/contracts/SafeMath.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/Debt.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Debt.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Debt.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/Debt.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -27,21 +21,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/contracts/Debt.sol">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="59" column="24" selection-start-line="59" selection-start-column="12" selection-end-line="59" selection-end-column="24" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/src/components/Debts.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="114">
-              <caret line="49" column="39" selection-start-line="49" selection-start-column="39" selection-end-line="49" selection-end-column="39" />
-              <folding>
-                <element signature="e#0#3575#0" />
-                <element signature="e#0#3575#0" />
-              </folding>
+            <state relative-caret-position="618">
+              <caret line="140" column="23" selection-start-line="140" selection-start-column="4" selection-end-line="140" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -49,17 +30,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/src/components/Endorsers.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="50" column="25" selection-start-line="50" selection-start-column="4" selection-end-line="50" selection-end-column="25" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/client/src/components/Loans.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="14" column="16" selection-start-line="14" selection-start-column="16" selection-end-line="14" selection-end-column="16" />
+            <state relative-caret-position="558">
+              <caret line="89" column="39" selection-start-line="89" selection-start-column="39" selection-end-line="89" selection-end-column="39" />
+              <folding>
+                <element signature="e#0#2218#0" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -67,100 +42,36 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/src/components/RequestLending.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="298">
-              <caret line="34" column="57" selection-start-line="34" selection-start-column="57" selection-end-line="34" selection-end-column="57" />
+            <state relative-caret-position="-477">
+              <caret line="118" column="77" selection-start-line="118" selection-start-column="29" selection-end-line="118" selection-end-column="77" />
               <folding>
-                <element signature="e#0#3264#0" />
-                <element signature="e#0#3264#0" />
-                <element signature="e#0#3264#0" />
-                <element signature="e#0#3264#0" />
-                <element signature="e#0#3264#0" />
-                <element signature="e#0#3264#0" />
-                <element signature="e#0#3264#0" />
-                <element signature="e#0#3264#0" />
-                <element signature="e#0#3264#0" />
-                <element signature="e#0#3264#0" />
-                <element signature="e#0#3264#0" />
-                <element signature="e#0#3264#0" />
-                <element signature="e#0#3264#0" />
-                <element signature="e#0#3264#0" />
-                <element signature="e#0#3264#0" />
+                <element signature="e#0#5997#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/src/components/RepayDebt.js">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/client/src/components/ForceCloseDebt.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="348">
-              <caret line="131" column="42" selection-start-line="131" selection-start-column="42" selection-end-line="131" selection-end-column="42" />
+            <state relative-caret-position="303">
+              <caret line="104" column="33" selection-start-line="104" selection-start-column="33" selection-end-line="104" selection-end-column="33" />
               <folding>
-                <element signature="e#0#4687#0" />
-                <element signature="e#0#4687#0" />
-                <element signature="e#0#4687#0" />
-                <element signature="e#0#4687#0" />
-                <element signature="e#0#4687#0" />
-                <element signature="e#0#4687#0" />
-                <element signature="e#0#4687#0" />
-                <element signature="e#0#4687#0" />
-                <element signature="e#0#4687#0" />
-                <element signature="e#0#4687#0" />
-                <element signature="e#0#4687#0" />
-                <element signature="e#0#4687#0" />
-                <element signature="e#0#4687#0" />
-                <element signature="e#0#4687#0" />
-                <element signature="e#0#4687#0" />
-                <element signature="e#0#4687#0" />
-                <element signature="e#0#4687#0" />
+                <element signature="e#0#3796#0" />
+                <element signature="e#0#3796#0" />
+                <element signature="e#0#3796#0" />
+                <element signature="e#0#3796#0" />
+                <element signature="e#0#3796#0" />
+                <element signature="e#0#3796#0" />
+                <element signature="e#0#3796#0" />
+                <element signature="e#0#3796#0" />
+                <element signature="e#0#3796#0" />
+                <element signature="e#0#3796#0" />
+                <element signature="e#0#3796#0" />
+                <element signature="e#0#3796#0" />
+                <element signature="e#0#3796#0" />
+                <element signature="e#0#3796#0" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/src/components/LendMoney.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="498">
-              <caret line="101" column="61" selection-start-line="101" selection-start-column="61" selection-end-line="101" selection-end-column="61" />
-              <folding>
-                <element signature="e#0#3156#0" />
-                <element signature="e#0#4223#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/src/components/StakeMoney.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="109" column="4" selection-start-line="109" selection-start-column="4" selection-end-line="139" selection-end-column="5" />
-              <folding>
-                <element signature="e#0#4120#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/src/components/WithdrawStakeMoney.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="523">
-              <caret line="93" column="4" selection-start-line="93" selection-start-column="4" selection-end-line="105" selection-end-column="5" />
-              <folding>
-                <element signature="e#0#4051#0" />
-                <element signature="e#0#4051#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/src/components/Header.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="356">
-              <caret line="54" column="18" selection-start-line="54" selection-start-column="18" selection-end-line="54" selection-end-column="18" />
             </state>
           </provider>
         </entry>
@@ -188,10 +99,12 @@
         <option value="$PROJECT_DIR$/client/src/components/LendMoney.js" />
         <option value="$PROJECT_DIR$/client/src/components/RepayDebt.js" />
         <option value="$PROJECT_DIR$/client/src/components/Header.js" />
-        <option value="$PROJECT_DIR$/client/src/components/Endorsers.js" />
-        <option value="$PROJECT_DIR$/client/src/components/RequestLending.js" />
         <option value="$PROJECT_DIR$/client/src/components/Debts.js" />
+        <option value="$PROJECT_DIR$/client/src/components/CloseDebt.js" />
+        <option value="$PROJECT_DIR$/client/src/components/RequestLending.js" />
+        <option value="$PROJECT_DIR$/client/src/components/ForceCloseDebt.js" />
         <option value="$PROJECT_DIR$/client/src/components/Loans.js" />
+        <option value="$PROJECT_DIR$/client/src/components/Endorsers.js" />
       </list>
     </option>
   </component>
@@ -365,64 +278,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/components/WithdrawStakeMoney.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="523">
-          <caret line="93" column="4" selection-start-line="93" selection-start-column="4" selection-end-line="105" selection-end-column="5" />
-          <folding>
-            <element signature="e#0#4051#0" />
-            <element signature="e#0#4051#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/components/StakeMoney.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="109" column="4" selection-start-line="109" selection-start-column="4" selection-end-line="139" selection-end-column="5" />
-          <folding>
-            <element signature="e#0#4120#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/components/LendMoney.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="498">
-          <caret line="101" column="61" selection-start-line="101" selection-start-column="61" selection-end-line="101" selection-end-column="61" />
-          <folding>
-            <element signature="e#0#3156#0" />
-            <element signature="e#0#4223#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/components/RepayDebt.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="348">
-          <caret line="131" column="42" selection-start-line="131" selection-start-column="42" selection-end-line="131" selection-end-column="42" />
-          <folding>
-            <element signature="e#0#4687#0" />
-            <element signature="e#0#4687#0" />
-            <element signature="e#0#4687#0" />
-            <element signature="e#0#4687#0" />
-            <element signature="e#0#4687#0" />
-            <element signature="e#0#4687#0" />
-            <element signature="e#0#4687#0" />
-            <element signature="e#0#4687#0" />
-            <element signature="e#0#4687#0" />
-            <element signature="e#0#4687#0" />
-            <element signature="e#0#4687#0" />
-            <element signature="e#0#4687#0" />
-            <element signature="e#0#4687#0" />
-            <element signature="e#0#4687#0" />
-            <element signature="e#0#4687#0" />
-            <element signature="e#0#4687#0" />
-            <element signature="e#0#4687#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/src/components/Header.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="356">
@@ -430,59 +285,139 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/components/RequestLending.js">
+    <entry file="file://$PROJECT_DIR$/client/src/components/StakeMoney.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="298">
-          <caret line="34" column="57" selection-start-line="34" selection-start-column="57" selection-end-line="34" selection-end-column="57" />
+        <state relative-caret-position="155">
+          <caret line="98" column="64" lean-forward="true" selection-start-line="97" selection-start-column="8" selection-end-line="98" selection-end-column="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/components/WithdrawStakeMoney.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="322">
+          <caret line="113" column="57" selection-start-line="113" selection-start-column="18" selection-end-line="113" selection-end-column="57" />
           <folding>
-            <element signature="e#0#3264#0" />
-            <element signature="e#0#3264#0" />
-            <element signature="e#0#3264#0" />
-            <element signature="e#0#3264#0" />
-            <element signature="e#0#3264#0" />
-            <element signature="e#0#3264#0" />
-            <element signature="e#0#3264#0" />
-            <element signature="e#0#3264#0" />
-            <element signature="e#0#3264#0" />
-            <element signature="e#0#3264#0" />
-            <element signature="e#0#3264#0" />
-            <element signature="e#0#3264#0" />
-            <element signature="e#0#3264#0" />
-            <element signature="e#0#3264#0" />
-            <element signature="e#0#3264#0" />
+            <element signature="e#0#4093#0" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/contracts/Debt.sol">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="59" column="24" selection-start-line="59" selection-start-column="12" selection-end-line="59" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/components/Endorsers.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="50" column="25" selection-start-line="50" selection-start-column="4" selection-end-line="50" selection-end-column="25" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/client/src/components/Debts.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="49" column="39" selection-start-line="49" selection-start-column="39" selection-end-line="49" selection-end-column="39" />
+        <state relative-caret-position="209">
+          <caret line="24" column="10" selection-start-line="24" selection-start-column="10" selection-end-line="29" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/components/LendMoney.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="157" selection-end-column="37" />
           <folding>
-            <element signature="e#0#3575#0" />
-            <element signature="e#0#3575#0" />
+            <element signature="e#0#4678#0" />
+            <element signature="e#0#4678#0" />
+            <element signature="e#0#4678#0" />
+            <element signature="e#0#4678#0" />
+            <element signature="e#0#4678#0" />
+            <element signature="e#0#4678#0" />
+            <element signature="e#0#4678#0" />
+            <element signature="e#0#4678#0" />
+            <element signature="e#0#4678#0" />
+            <element signature="e#0#4678#0" />
+            <element signature="e#0#4678#0" />
+            <element signature="e#0#4678#0" />
+            <element signature="e#0#4678#0" />
+            <element signature="e#0#4678#0" />
+            <element signature="e#0#4678#0" />
+            <element signature="e#0#4678#0" />
+            <element signature="e#0#4678#0" />
+            <element signature="e#0#4678#0" />
+            <element signature="e#0#4678#0" />
+            <element signature="e#0#4678#0" />
+            <element signature="e#0#4678#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/components/RepayDebt.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="598">
+          <caret line="78" column="16" selection-start-line="78" selection-start-column="16" selection-end-line="78" selection-end-column="41" />
+          <folding>
+            <element signature="e#0#4658#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/components/CloseDebt.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="40">
+          <caret line="45" column="27" selection-start-line="45" selection-start-column="27" selection-end-line="45" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#4678#0" />
+            <element signature="e#0#4678#0" />
+            <element signature="e#0#4678#0" />
+            <element signature="e#0#4678#0" />
+            <element signature="e#0#4678#0" />
+            <element signature="e#0#4678#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/client/src/components/Loans.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="16" selection-start-line="14" selection-start-column="16" selection-end-line="14" selection-end-column="16" />
+        <state relative-caret-position="405">
+          <caret line="27" column="31" selection-start-line="27" selection-start-column="31" selection-end-line="27" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/contracts/Debt.sol">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="618">
+          <caret line="140" column="23" selection-start-line="140" selection-start-column="4" selection-end-line="140" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/components/Endorsers.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="558">
+          <caret line="89" column="39" selection-start-line="89" selection-start-column="39" selection-end-line="89" selection-end-column="39" />
+          <folding>
+            <element signature="e#0#2218#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/components/RequestLending.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-477">
+          <caret line="118" column="77" selection-start-line="118" selection-start-column="29" selection-end-line="118" selection-end-column="77" />
+          <folding>
+            <element signature="e#0#5997#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/components/ForceCloseDebt.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="303">
+          <caret line="104" column="33" selection-start-line="104" selection-start-column="33" selection-end-line="104" selection-end-column="33" />
+          <folding>
+            <element signature="e#0#3796#0" />
+            <element signature="e#0#3796#0" />
+            <element signature="e#0#3796#0" />
+            <element signature="e#0#3796#0" />
+            <element signature="e#0#3796#0" />
+            <element signature="e#0#3796#0" />
+            <element signature="e#0#3796#0" />
+            <element signature="e#0#3796#0" />
+            <element signature="e#0#3796#0" />
+            <element signature="e#0#3796#0" />
+            <element signature="e#0#3796#0" />
+            <element signature="e#0#3796#0" />
+            <element signature="e#0#3796#0" />
+            <element signature="e#0#3796#0" />
+          </folding>
         </state>
       </provider>
     </entry>

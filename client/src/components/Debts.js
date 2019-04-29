@@ -22,6 +22,13 @@ class Debts extends Component {
         this.state = {
           account: drizzleState.accounts[0],
 
+          loanAmount: 0,
+          lender: "",
+          loanStatus: "",
+          debtTotalAmount: 0,
+          repaidAmount: 0,
+          openingTime: "",
+
           status: "initialized",
           modal: false,
           transactionHash: "",
@@ -51,27 +58,17 @@ class Debts extends Component {
     }
 
     createTable = () => {
-        let rows = [];
-
         this.contracts.Debt.methods.debts(this.state.account).call({'from': this.state.account})
             .then((result) => {
-                let cell = []
-                cell.push(<td key={result.amount} >{result.amount}</td>)
-                cell.push(<td key={result.lender} ></td>)
-                cell.push(<td key={result.status} ></td>)
-                cell.push(<td key={result.debtTotalAmount} ></td>)
-                cell.push(<td key={result.repaidAmount} ></td>)
-
-                rows.push(<tr>
-                    {
-                        cell
-                    }
-                    </tr>)
+                this.state.loanAmount = result.amount;
+                this.state.lender = result.lender;
+                this.state.loanStatus = result.status;
+                this.state.debtTotalAmount = result.debtTotalAmount;
+                this.state.repaidAmount = result.repaidAmount;
+                this.state.openingTime = result.openingTime;
 
                 console.log('RR: ' + result.amount + ',  lender: ' + result.lender + ', state: ' + result.status);
             });
-
-        return rows;
     }
 
 
