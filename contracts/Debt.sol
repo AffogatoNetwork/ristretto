@@ -244,6 +244,9 @@ contract Debt {
   function forceCloseDebt(address _debtor) public {
     require(now >= debts[_debtor].openingTime + 60 days, "time must be greater than 2 months");
     string memory status = debts[_debtor].status;
+    stakedAmount[debts[_debtor].lender] = stakedAmount[debts[_debtor].lender].add(debts[_debtor].amount);
+    uint256 totalAmount = debts[_debtor].amount.mul(2);
+    uint256 repaidAmount = debts[_debtor].repaidAmount;
     debtStruct storage debt = debts[_debtor];
     debt.status = "";
     debt.lender = address(0);
@@ -261,9 +264,21 @@ contract Debt {
         }
       }
     }else{
-      //TODO: Slash stake
+      for (uint i = 0; i < userEndorsers[_debtor].length; i++){
+        if(userEndorsers[_debtor][i] != address(0)){
+          address currentUser = userEndorsers[_debtor][i];
+          uint256 endorsedStakeSlash = endorserToUserStake[_debtor][currentUser].div(2);
+          endorsedStake[_debtor] = endorsedStake[_debtor].add(endorserToUserStake[_debtor][currentUser]).sub(endorsedStakeSlash);
+          uint256 restoreAmount = repaidAmount.mul(endorserToUserStake[_debtor][currentUser]).div(totalAmount);
+          availableToEndorse[currentUser] =  availableToEndorse[currentUser].sub(endorsedStakeSlash).add(restoreAmount);
+          stakedAmount[currentUser] =  stakedAmount[currentUser].sub(endorsedStakeSlash).add(restoreAmount);
+        }
+      }
     } 
     emit LogForceCloseDebt(_debtor);
   } 
- //Repaid amount goes back to stakers
+
+  function() external payable {
+    revert() ; 
+  }   
 }
