@@ -5,6 +5,10 @@ ul.nav{
 
 ul.nav svg{    display: inline;}
 
+.break-word {
+  word-wrap: break-word;
+}
+
 .App {
   text-align: center;
 }

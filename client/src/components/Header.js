@@ -28,8 +28,10 @@ class Header extends Component {
     this.setState({ hasBalance, balance });
   }
 
-  async loadStake(drizzle){
-    var stake = await drizzle.contracts.Debt.methods.getStakedAmount(this.state.account).call();
+  async loadStake(drizzle) {
+    var stake = await drizzle.contracts.Debt.methods
+      .getStakedAmount(this.state.account)
+      .call();
     stake = drizzle.web3.utils.fromWei(stake, "ether");
     this.setState({ stake: stake });
   }
@@ -48,33 +50,30 @@ class Header extends Component {
         <NavItem className="ml-2 mr-4 mt-4 pt-1 text-left ">
           <Link href="/loans/">
             <span>
-              <Icon name="loan" size="20" className="mr-1" />
-              Loan
+              <Icon name="AccountBalance" size="20" className="mr-1" />
+              Debts
             </span>
           </Link>
         </NavItem>
         <NavItem className="ml-2 mr-4 mt-4 pt-1 text-left ">
           <Link href="/endorsers/">
             <span>
-              <Icon name="Users" size="20" className="mr-1" />
+              <Icon name="People" size="20" className="mr-1" />
               Endorsers
             </span>
           </Link>
         </NavItem>
-
         <NavItem className="ml-2 mr-4 mt-4 pt-1 text-left ">
-          <Link href="#">
-            <Icon name="AccountBalanceWallet" size="20" className="mr-1" />
-            Balance: {this.state.balance} ETH
-          </Link>
-        </NavItem>
-        <NavItem className="ml-2 mr-4 mt-4 pt-1 text-left ">
-          <Link href="#">
-            <Icon name="StakeMoney" size="20" className="mr-1" />
+          <Link href="/stake/">
+            <Icon name="Lock" size="20" className="mr-1" />
             Stake: {this.state.stake} ETH
           </Link>
         </NavItem>
-        <NavItem className="ml-2 mt-1 text-right ">
+        <NavItem className="ml-2 mr-4 mt-4 pt-1 text-left ">
+          <Icon name="AccountBalanceWallet" size="20" className="mr-1" />
+          Balance: {this.state.balance} ETH
+        </NavItem>
+        <NavItem className="ml-2 mt-1 text-right">
           <b>Current Account:</b> <br />
           <label>{this.state.account}</label>
         </NavItem>

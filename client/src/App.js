@@ -11,6 +11,7 @@ import Home from "./components/Home";
 import Endosers from "./components/Endorsers";
 import Loans from "./components/Loans";
 import CheckAccountChanges from "./components/CheckAccountChanges";
+import Stake from "./components/Stake";
 
 class App extends Component {
   state = {
@@ -45,7 +46,6 @@ class App extends Component {
       return <Loading />;
     } else {
       return (
-
         <ThemeProvider>
           <CheckAccountChanges
             loggedAccount={this.state.drizzleState.accounts[0]}
@@ -86,10 +86,19 @@ class App extends Component {
               />
             )}
           />
+          <Route
+            exact
+            path="/stake/"
+            render={() => (
+              <Stake
+                drizzle={this.props.drizzle}
+                drizzleState={this.state.drizzleState}
+              />
+            )}
+          />
 
           <ToastMessage.Provider ref={node => (window.toastProvider = node)} />
         </ThemeProvider>
-
       );
     }
   }

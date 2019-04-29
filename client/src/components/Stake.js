@@ -1,16 +1,16 @@
 import React, { Component } from "react";
-import RequestLending from "./RequestLending";
-import LendMoney from "./LendMoney";
+import StakeMoney from "./StakeMoney";
+import WithdrawStakeMoney from "./WithdrawStakeMoney";
 
-class Home extends Component {
+class Stake extends Component {
   render() {
     return (
       <>
-        <RequestLending
+        <StakeMoney
           drizzleState={this.props.drizzleState}
           drizzle={this.props.drizzle}
         />
-        <LendMoney
+        <WithdrawStakeMoney
           drizzleState={this.props.drizzleState}
           drizzle={this.props.drizzle}
         />
@@ -19,4 +19,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default Stake;
