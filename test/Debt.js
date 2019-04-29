@@ -558,7 +558,7 @@ contract("Debt", accounts => {
   });
 
   it("... should allow to close the request if time is greater than 2 months", async () => {
-    //TODO: if is normal just reset
+    // if it's just requested resets the debt object
     let amount = web3.utils.toWei("0", "ether");
     await this.debtInstance.requestLending({
       from: accounts[2]
@@ -619,14 +619,84 @@ contract("Debt", accounts => {
 
   it("... should allow repay to lender if it hasn't paid", async () => {
     let amount = web3.utils.toWei("1", "ether");
-    const receipt = await this.debtInstance.requestLending({
+    await this.debtInstance.requestLending({
       from: accounts[2]
     });
-    const debt = await this.debtInstance.debts(accounts[2]);
     await helper.advanceTimeAndBlock(SECONDS_IN_DAY * 1); //advance 1 days
     await this.debtInstance.lendMoney(accounts[2], {
       from: accounts[4],
       value: amount
     });
+    let paidAmount = web3.utils.toWei("0.5", "ether");
+    await this.debtInstance.repayDebt(accounts[2], {
+      from: accounts[2],
+      value: paidAmount
+    });
+    await helper.advanceTimeAndBlock(SECONDS_IN_DAY * 61); //advance 61 days
+    await this.debtInstance.forceCloseDebt(accounts[2], {
+      from: accounts[4]
+    });
+    let endorsment1 = await this.debtInstance.availableToEndorse(accounts[1]);
+    let endorsment2 = await this.debtInstance.availableToEndorse(accounts[3]);
+    let endorsment3 = await this.debtInstance.availableToEndorse(accounts[4]);
+    web3.utils
+      .fromWei(endorsment1, "wei")
+      .should.be.equal(
+        web3.utils.toWei("1.7625", "ether"),
+        "Should be less as start of endorsment plus interest and repaid amount"
+      );
+    web3.utils
+      .fromWei(endorsment2, "wei")
+      .should.be.equal(
+        web3.utils.toWei("2.7625", "ether"),
+        "Should be less as start of endorsment plus interest and repaid amount"
+      );
+    web3.utils
+      .fromWei(endorsment3, "wei")
+      .should.be.equal(
+        web3.utils.toWei("1.0250", "ether"),
+        "Should be less as start of endorsment plus interest and repaid amount "
+      );
+    let staked1 = await this.debtInstance.getStakedAmount(accounts[1]);
+    web3.utils
+      .fromWei(staked1, "wei")
+      .should.be.equal(
+        web3.utils.toWei("0.7625", "ether"),
+        "Stake should be the less as deposit plus interest and repaid amount"
+      );
+    let staked2 = await this.debtInstance.getStakedAmount(accounts[3]);
+    web3.utils
+      .fromWei(staked2, "wei")
+      .should.be.equal(
+        web3.utils.toWei("1.7625", "ether"),
+        "Stake should be the less as deposit plus interest and repaid amount"
+      );
+    let staked3 = await this.debtInstance.getStakedAmount(accounts[4]);
+    web3.utils
+      .fromWei(staked3, "wei")
+      .should.be.equal(
+        web3.utils.toWei("2.0250", "ether"),
+        "Stake should be the same as deposit plus interest and repaid amount"
+      );
+    const endorsedStake = await this.debtInstance.endorsedStake(accounts[2]);
+    web3.utils
+      .fromWei(endorsedStake, "wei")
+      .should.be.equal(
+        web3.utils.toWei("1", "ether"),
+        "Equal to endorsed of staker"
+      );
+  });
+
+  it("... should revert on sending money to the contract", async () => {
+    let amount = web3.utils.toWei("1", "ether");
+    try {
+      await this.debtInstance.send(amount, { from: accounts[0] });
+    } catch (err) {
+      isException = true;
+    }
+    expect(isException).to.be.equal(
+      true,
+      "it should revert on sending money to the contract"
+    );
   });
 });
