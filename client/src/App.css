@@ -1,3 +1,14 @@
+ul.nav{    
+  border-bottom: 1px #e2e2e294 solid;
+  padding-bottom: 10px;
+}
+
+ul.nav svg{    display: inline;}
+
+.break-word {
+  word-wrap: break-word;
+}
+
 .App {
   text-align: center;
 }
