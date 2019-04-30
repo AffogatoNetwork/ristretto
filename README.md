@@ -1,6 +1,14 @@
 # Ristretto
 Ristretto is a Peer to Peer lending platform where the debt is backed by friends, family or people that trust in the borrower.
 
+## Demo
+- **Video Demo:** TBD
+- **Frontend URL:** https://nervous-banach-90fc9b.netlify.com
+- **Rinkeby Address:** [0xdA4C07B7159C6302330cA947089893018D382EE3](https://rinkeby.etherscan.io/address/0xda4c07b7159c6302330ca947089893018d382ee3)
+- **Sokol POA Address:** [0x902C68ED3bde2e270a747A507BF59329ba33fbfC](https://blockscout.com/poa/sokol/address/0x902c68ed3bde2e270a747a507bf59329ba33fbfc/transactions)
+
+
+## Instructions
 The users can have different roles in the platform, they can be *Endorsers*, *Borrowers* or *Lenders*.
 
 ### Endorser
@@ -10,7 +18,7 @@ These users are the ones that takes the risk when an user
 doesn't pay a debt, the risk is divided between all the
 endorsers of a borrower.
 
-*Actions*:
+**Actions**:
 - Stake Money
 - Endorse Users
 - Earn interest money from honest borrower
@@ -21,7 +29,7 @@ Borrowers are the users that require money. In order for a
 borrower to request a lending they first need other users to
 endorse them.
 
-*Actions:*
+**Actions:**
 
 - Receive Endorsement
 - Request Lending
@@ -34,7 +42,7 @@ Lenders are the users that provide the money for a borrower,
 they can analize if a borrower has many endorsers and are able
 to provide the money for it's debt.
 
-*Actions:*
+**Actions:**
 - Lend Money
 - Regain your Money plus an interest
 - Close Debt
@@ -42,7 +50,7 @@ to provide the money for it's debt.
 *If in two months the borrower doesn't pay anyone can call
 Force Close Debt and the endorsers will pay the lending*
 
-## Getting Started
+## Installation
 
 Clone the project on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
@@ -112,29 +120,16 @@ Run migration with the rinkeby network
 truffle migrate --network rinkeby
 ``` 
 
-### POA Core
+### Sokol POA Testnet
 
 Create a .env file with the following values:
 
 ```
-MNENOMIC_POA="MNEMONIC KEY OF ACCOUNT WITH POA"
+MNENOMIC_POA="MNEMONIC KEY OF ACCOUNT WITH SPOA"
 ``` 
 
-Run migration with the poa network
+Run migration with the sokol network
 
 ```
-truffle migrate --network poa
-``` 
-### xDAI Chain
-
-Create a .env file with the following values:
-
-```
-MNENOMIC_XDAI="MNEMONIC KEY OF ACCOUNT WITH xDAI"
-``` 
-
-Run migration with the xdai network
-
-```
-truffle migrate --network xdai
+truffle migrate --network sokol
 ``` 

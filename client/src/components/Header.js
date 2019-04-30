@@ -51,7 +51,7 @@ class Header extends Component {
           isOpen={this.state.visible}
           toggle={this.onDismiss}
         >
-          ⚠️ This is a non audited Demo! Use it on <b>Rinkeby</b> or
+          ⚠️ This is a non audited Demo! Use it on <b>Rinkeby</b> or{" "}
           <b>Sokol POA</b> Testnets only.
         </Alert>
         <Nav className="mt-4 justify-content-end">
