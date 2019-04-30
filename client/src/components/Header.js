@@ -70,6 +70,12 @@ class Header extends Component {
           </Link>
         </NavItem>
         <NavItem className="ml-2 mr-4 mt-4 pt-1 text-left ">
+          <Link href="/instructions/">
+            <Icon name="Help" size="20" className="mr-1" />
+            Help
+          </Link>
+        </NavItem>
+        <NavItem className="ml-2 mr-4 mt-4 pt-1 text-left ">
           <Icon name="AccountBalanceWallet" size="20" className="mr-1" />
           Balance: {this.state.balance} ETH
         </NavItem>

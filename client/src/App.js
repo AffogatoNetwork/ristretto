@@ -12,6 +12,7 @@ import Endosers from "./components/Endorsers";
 import Loans from "./components/Loans";
 import CheckAccountChanges from "./components/CheckAccountChanges";
 import Stake from "./components/Stake";
+import Instructions from "./components/Instructions";
 
 class App extends Component {
   state = {
@@ -96,7 +97,7 @@ class App extends Component {
               />
             )}
           />
-
+          <Route exact path="/instructions/" render={() => <Instructions />} />
           <ToastMessage.Provider ref={node => (window.toastProvider = node)} />
         </ThemeProvider>
       );
