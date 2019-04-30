@@ -1,4 +1,4 @@
-# ristretto
+# Ristretto
 Ristretto is a Peer to Peer lending platform where the debt is backed by friends, family or people that trust in the borrower.
 
 The users can have different roles in the platform, they can be *Endorsers*, *Borrowers* or *Lenders*.
