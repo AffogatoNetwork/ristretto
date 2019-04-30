@@ -13,7 +13,22 @@ class Instructions extends Component {
               <Heading.h2>Instructions</Heading.h2>
               <Card className="mt-4 mx-auto">
                 <Text mb={4}>
+                  Ristretto is a Peer to Peer lending platform where the debt is
+                  backed by friends, family or people that trust in the
+                  borrower.
+                  <br />
+                  The users can have different roles in the platform, they can
+                  be <b>Endorsers</b>, <b>Borrowers</b> or <b>Lenders</b>.
                   <Heading.h4>Endorser</Heading.h4>
+                  The endorsers are friends or family of the borrower, they
+                  trust that the borrower is able to pay and is a honest person.
+                  These users are the ones that takes the risk when an user
+                  doesn't pay a debt, the risk is divided between all the
+                  endorsers of a borrower.
+                  <br />
+                  <br />
+                  <b>Actions:</b>
+                  <br />
                   <ul>
                     <li>Stake Money</li>
                     <li>Endorse Users</li>
@@ -21,6 +36,13 @@ class Instructions extends Component {
                     <li>Close Debt</li>
                   </ul>
                   <Heading.h4>Borrower</Heading.h4>
+                  Borrowers are the users that require money. In order for a
+                  borrower to request a lending they first need other users to
+                  endorse them.
+                  <br />
+                  <br />
+                  <b>Actions:</b>
+                  <br />
                   <ul>
                     <li>Receive Endorsement</li>
                     <li>Request Lending</li>
@@ -29,6 +51,13 @@ class Instructions extends Component {
                     <li>Close Debt</li>
                   </ul>
                   <Heading.h4>Lender</Heading.h4>
+                  Lenders are the users that provide the money for a borrower,
+                  they can analize if a borrower has many endorsers and are able
+                  to provide the money for it's debt.
+                  <br />
+                  <br />
+                  <b>Actions:</b>
+                  <br />
                   <ul>
                     <li>Lend Money</li>
                     <li>Regain your Money plus an interest</li>
