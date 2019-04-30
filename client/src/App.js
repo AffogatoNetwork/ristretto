@@ -13,6 +13,7 @@ import Loans from "./components/Loans";
 import CheckAccountChanges from "./components/CheckAccountChanges";
 import Stake from "./components/Stake";
 import Instructions from "./components/Instructions";
+import { Alert } from "reactstrap";
 
 class App extends Component {
   state = {
