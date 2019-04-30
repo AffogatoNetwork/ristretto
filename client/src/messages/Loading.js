@@ -6,7 +6,7 @@ const Loading = () => (
   <div className="loading-wrapper">
     <Icon name="AccountBalance" color="primary" className="loading-icon" />
     <h4 className="mt-0">Loading...</h4>
-    <p>Use Rinkeby or Sokol POA Test Network</p>
+    <p className="text-center">Use Rinkeby or Sokol POA Test Network</p>
   </div>
 );
 
