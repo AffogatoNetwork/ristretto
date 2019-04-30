@@ -16,7 +16,8 @@
 
 .loading-icon {
     max-width: 100%;
-    color: #fff;
+    width: 250px;
+    height: 100px;
     text-align: center;    
     display: block;
     margin-left: auto;

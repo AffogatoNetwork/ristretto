@@ -127,7 +127,7 @@ truffle migrate --network rinkeby
 Create a .env file with the following values:
 
 ```
-MNENOMIC_POA="MNEMONIC KEY OF ACCOUNT WITH SPOA"
+MNENOMIC="MNEMONIC KEY OF ACCOUNT WITH SPOA"
 ``` 
 
 Run migration with the sokol network
