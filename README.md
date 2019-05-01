@@ -1,11 +1,12 @@
 # Ristretto
-Ristretto is a Peer to Peer lending platform where the debt is backed by friends, family or people that trust in the borrower. The end goal is to use xDAI chain to provide fast transactions, xDAI stability allows lendings to be eficients and remove the risk. Currently is uploaded in Sokol POA Testnet and Rinkeby.
+Ristretto is a Peer to Peer lending platform where the debt is backed by friends, family or people that trust in the borrower. The end goal is to use **xDAI** chain to provide fast transactions, **xDAI** stability allows lendings to be eficients and remove the risk. Currently is uploaded in *Sokol POA Testnet* and *Rinkeby Ethereum Testnet*.
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/8d4a66e7-4a34-496b-8e9e-64eac772d14d/deploy-status)](https://app.netlify.com/sites/nervous-banach-90fc9b/deploys)
 
 ## Demo
 - **Video Demo:** https://www.youtube.com/watch?v=e0EjiaDC6rk
-- **Frontend URL:** https://ristretto-affogato.netlify.com
+- **Pitch Deck:** https://docs.google.com/presentation/d/1qWOhkN9o9FYGK8mOTctUP15HsAVNf7LzsjFpgKfGL3w/edit?usp=sharing
+- **Demo URL:** https://ristretto-affogato.netlify.com
 - **Rinkeby Address:** [0xdA4C07B7159C6302330cA947089893018D382EE3](https://rinkeby.etherscan.io/address/0xda4c07b7159c6302330ca947089893018d382ee3)
 - **Sokol POA Address:** [0x902C68ED3bde2e270a747A507BF59329ba33fbfC](https://blockscout.com/poa/sokol/address/0x902c68ed3bde2e270a747a507bf59329ba33fbfc/transactions)
 
