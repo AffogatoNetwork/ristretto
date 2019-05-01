@@ -35776,10 +35776,16 @@
       "links": {},
       "address": "0x37E2750C434211C7D2e1F9aF56CB5dbE9BaA703D",
       "transactionHash": "0xda54b87a67a5779e2d2384ce75453756aae091d4d273a11624d672522b6c1cfe"
+    },
+    "1556670825516": {
+      "events": {},
+      "links": {},
+      "address": "0x268DcA2481659c526aa0dfB3dE32B424C859064F",
+      "transactionHash": "0xda54b87a67a5779e2d2384ce75453756aae091d4d273a11624d672522b6c1cfe"
     }
   },
   "schemaVersion": "3.0.6",
-  "updatedAt": "2019-04-30T22:07:36.448Z",
+  "updatedAt": "2019-05-01T00:34:08.216Z",
   "devdoc": {
     "methods": {
       "closeDebt(address)": {
