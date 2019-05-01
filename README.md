@@ -1,6 +1,8 @@
 # Ristretto
 Ristretto is a Peer to Peer lending platform where the debt is backed by friends, family or people that trust in the borrower. The end goal is to use **xDAI** chain to provide fast transactions, **xDAI** stability allows lendings to be eficients and remove the risk. Currently is uploaded in *Sokol POA Testnet* and *Rinkeby Ethereum Testnet*.
 
+This platform can have a high impact on coffee farmers, as most of them have no access to any kind of credit. Typically they are forced to sell their crops at really low prices in order to finance the next crop and keep business flowing. A low-interest, DeFi loan can change their whole operation.
+
 [![Netlify Status](https://api.netlify.com/api/v1/badges/8d4a66e7-4a34-496b-8e9e-64eac772d14d/deploy-status)](https://app.netlify.com/sites/nervous-banach-90fc9b/deploys)
 
 ## Demo
