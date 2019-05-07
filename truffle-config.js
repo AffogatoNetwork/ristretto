@@ -32,6 +32,11 @@ module.exports = {
       provider: () =>
         new HDWalletProvider(mnemonic, process.env.RINKEBY_API_URL),
       network_id: "4"
+    },
+    xdai: {
+      // must be a thunk, otherwise truffle commands may hang in CI
+      provider: () => new HDWalletProvider(mnemonic, "https://dai.poa.network"),
+      network_id: "100"
     }
   }
 };

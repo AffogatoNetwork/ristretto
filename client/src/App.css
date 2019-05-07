@@ -41,3 +41,8 @@ ul.nav svg{    display: inline;}
     transform: rotate(360deg);
   }
 }
+
+
+body.ristretto {
+  color:#332211;
+}

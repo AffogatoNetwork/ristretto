@@ -35771,6 +35771,12 @@
       "address": "0x902C68ED3bde2e270a747A507BF59329ba33fbfC",
       "transactionHash": "0x4ff086ef6ef1e15577ac6dc469bf708af0d996cf06312b16a28285a14a345da2"
     },
+    "100": {
+      "events": {},
+      "links": {},
+      "address": "0x7f2c39E6eb4Fa81ea9856324C2dA97D84Ddb5826",
+      "transactionHash": "0x4b43ea934e9c5be3a91bc852b4727137f741a4b19bd581a5065fcf93eb40e897"
+    },
     "1556566396321": {
       "events": {},
       "links": {},
@@ -35782,10 +35788,16 @@
       "links": {},
       "address": "0x268DcA2481659c526aa0dfB3dE32B424C859064F",
       "transactionHash": "0xda54b87a67a5779e2d2384ce75453756aae091d4d273a11624d672522b6c1cfe"
+    },
+    "1557251224517": {
+      "events": {},
+      "links": {},
+      "address": "0xC97009cf49649656D1B4BdEAA7fF60341f6031e1",
+      "transactionHash": "0xda54b87a67a5779e2d2384ce75453756aae091d4d273a11624d672522b6c1cfe"
     }
   },
   "schemaVersion": "3.0.6",
-  "updatedAt": "2019-05-01T00:34:08.216Z",
+  "updatedAt": "2019-05-07T21:42:50.642Z",
   "devdoc": {
     "methods": {
       "closeDebt(address)": {

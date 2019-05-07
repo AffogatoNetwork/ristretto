@@ -11,6 +11,7 @@ This platform can have a high impact on coffee farmers, as most of them have no 
 - **Demo URL:** https://ristretto-affogato.netlify.com
 - **Rinkeby Address:** [0xdA4C07B7159C6302330cA947089893018D382EE3](https://rinkeby.etherscan.io/address/0xda4c07b7159c6302330ca947089893018d382ee3)
 - **Sokol POA Address:** [0x902C68ED3bde2e270a747A507BF59329ba33fbfC](https://blockscout.com/poa/sokol/address/0x902c68ed3bde2e270a747a507bf59329ba33fbfc/transactions)
+- **xDAI Address** [0x7f2c39E6eb4Fa81ea9856324C2dA97D84Ddb5826](https://blockscout.com/poa/dai/address/0x7f2c39E6eb4Fa81ea9856324C2dA97D84Ddb5826/transactions)
 
 
 ## Instructions

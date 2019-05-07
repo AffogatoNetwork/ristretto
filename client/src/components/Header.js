@@ -44,6 +44,23 @@ class Header extends Component {
   }
 
   render() {
+    const { networkId } = this.props;
+    let money = "";
+    console.log(networkId);
+    switch (networkId) {
+      case 100:
+        money = "xDAI";
+        break;
+      case 99:
+        money = "POA";
+        break;
+      case 77:
+        money = "SPOA";
+        break;
+      default:
+        money = "ETH";
+        break;
+    }
     return (
       <>
         <Alert
@@ -51,12 +68,17 @@ class Header extends Component {
           isOpen={this.state.visible}
           toggle={this.onDismiss}
         >
-          ⚠️ This is a non audited Demo! Use it on <b>Rinkeby</b> or{" "}
-          <b>Sokol POA</b> Testnets only.
+          ⚠️ This is a non audited Hackathon Demo! We recommend to use it on{" "}
+          <b>Rinkeby</b> or <b>Sokol POA</b> Testnets. This project was
+          developed by the{" "}
+          <Link href="https://affogato.co" color="secondary" target="_blank">
+            <b>Affogato Team</b>
+          </Link>
+          .
         </Alert>
         <Nav className="mt-4 justify-content-end">
           <NavItem className="ml-2 mr-4 mt-4 pt-1 text-left ">
-            <Link href="/">
+            <Link href="/" color="secondary">
               <span>
                 <Icon name="Home" size="20" className="mr-1" />
                 Home
@@ -64,7 +86,7 @@ class Header extends Component {
             </Link>
           </NavItem>
           <NavItem className="ml-2 mr-4 mt-4 pt-1 text-left ">
-            <Link href="/loans/">
+            <Link href="/loans/" color="secondary">
               <span>
                 <Icon name="AccountBalance" size="20" className="mr-1" />
                 Debts
@@ -72,7 +94,7 @@ class Header extends Component {
             </Link>
           </NavItem>
           <NavItem className="ml-2 mr-4 mt-4 pt-1 text-left ">
-            <Link href="/endorsers/">
+            <Link href="/endorsers/" color="secondary">
               <span>
                 <Icon name="People" size="20" className="mr-1" />
                 Endorsers
@@ -80,20 +102,25 @@ class Header extends Component {
             </Link>
           </NavItem>
           <NavItem className="ml-2 mr-4 mt-4 pt-1 text-left ">
-            <Link href="/stake/">
+            <Link href="/stake/" color="secondary">
               <Icon name="Lock" size="20" className="mr-1" />
-              Stake: {this.state.stake} ETH
+              Stake: {this.state.stake} {money}
             </Link>
           </NavItem>
           <NavItem className="ml-2 mr-4 mt-4 pt-1 text-left ">
-            <Link href="/instructions/">
+            <Link href="/instructions/" color="secondary">
               <Icon name="Help" size="20" className="mr-1" />
               Help
             </Link>
           </NavItem>
           <NavItem className="ml-2 mr-4 mt-4 pt-1 text-left ">
-            <Icon name="AccountBalanceWallet" size="20" className="mr-1" />
-            Balance: {this.state.balance} ETH
+            <Icon
+              name="AccountBalanceWallet"
+              size="20"
+              className="mr-1"
+              color="primary"
+            />
+            Balance: {this.state.balance} {money}
           </NavItem>
           <NavItem className="ml-2 mt-1 text-right">
             <b>Current Account:</b> <br />

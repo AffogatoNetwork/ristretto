@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 import Header from "./components/Header";
 import "./App.css";
-import { ThemeProvider } from "rimble-ui";
 import { Route } from "react-router-dom";
 import { withRouter } from "react-router";
 import { ToastMessage } from "rimble-ui";
-import Web3Warning from "./messages/Web3Warning";
 import Loading from "./messages/Loading";
 import Home from "./components/Home";
 import Endosers from "./components/Endorsers";
@@ -20,8 +18,7 @@ class App extends Component {
     messagesLoading: true,
     loading: true,
     drizzleState: null,
-    wrongNetwork: false,
-    noMetamask: false
+    networkId: null
   };
 
   componentDidMount = async () => {
@@ -34,7 +31,11 @@ class App extends Component {
 
       // check to see if it's ready, if so, update local component state
       if (drizzleState.drizzleStatus.initialized) {
-        this.setState({ loading: false, drizzleState });
+        this.setState({
+          loading: false,
+          drizzleState,
+          networkId: drizzleState.web3.networkId
+        });
       }
     });
   };
@@ -48,7 +49,7 @@ class App extends Component {
       return <Loading />;
     } else {
       return (
-        <ThemeProvider>
+        <>
           <CheckAccountChanges
             loggedAccount={this.state.drizzleState.accounts[0]}
             drizzle={this.props.drizzle}
@@ -57,6 +58,7 @@ class App extends Component {
           <Header
             drizzle={this.props.drizzle}
             drizzleState={this.state.drizzleState}
+            networkId={this.state.networkId}
           />
           <Route
             exact
@@ -100,7 +102,7 @@ class App extends Component {
           />
           <Route exact path="/instructions/" render={() => <Instructions />} />
           <ToastMessage.Provider ref={node => (window.toastProvider = node)} />
-        </ThemeProvider>
+        </>
       );
     }
   }

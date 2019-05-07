@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Container, Col, Row, Form, FormGroup } from "reactstrap";
 
-import { Heading, Field, Input, Button, Card, Text } from "rimble-ui";
+import { Heading, Link, Card, Text } from "rimble-ui";
 
 class Instructions extends Component {
   render() {
@@ -67,6 +67,15 @@ class Instructions extends Component {
                     *If in two months the borrower doesn't pay anyone can call
                     Force Close Debt and the endorsers will pay the lending
                   </b>
+                  <br />
+                  <br />
+                  <Heading.h4>Code Repository:</Heading.h4>
+                  <Link
+                    color="secondary"
+                    href="https://github.com/AffogatoNetwork/ristretto"
+                  >
+                    https://github.com/AffogatoNetwork/ristretto
+                  </Link>
                 </Text>
               </Card>
             </Col>
