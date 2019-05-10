@@ -3,6 +3,7 @@ const HDWalletProvider = require("truffle-hdwallet-provider");
 const path = require("path");
 
 var mnemonic = process.env.MNENOMIC;
+var mnemonic_poa = process.env.MNENOMIC_POA;
 
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
@@ -14,6 +15,13 @@ module.exports = {
   },
   contracts_build_directory: path.join(__dirname, "client/src/contracts"),
   networks: {
+    poa: {
+      provider: function() {
+        return new HDWalletProvider(mnemonic_poa, "https://core.poa.network");
+      },
+      network_id: "99",
+      skipDryRun: true
+    },
     sokol: {
       provider: function() {
         return new HDWalletProvider(mnemonic, "https://sokol.poa.network");

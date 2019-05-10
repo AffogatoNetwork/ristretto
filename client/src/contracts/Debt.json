@@ -35771,6 +35771,12 @@
       "address": "0x902C68ED3bde2e270a747A507BF59329ba33fbfC",
       "transactionHash": "0x4ff086ef6ef1e15577ac6dc469bf708af0d996cf06312b16a28285a14a345da2"
     },
+    "99": {
+      "events": {},
+      "links": {},
+      "address": "0xFE8BE654CFfB1F3F017905C3ceF133829FA6F886",
+      "transactionHash": "0x56155ea3a58c020ee7a969e3bf73747402507174be0d01071870c073c6416e21"
+    },
     "100": {
       "events": {},
       "links": {},
@@ -35797,7 +35803,7 @@
     }
   },
   "schemaVersion": "3.0.6",
-  "updatedAt": "2019-05-07T21:42:50.642Z",
+  "updatedAt": "2019-05-10T01:30:24.687Z",
   "devdoc": {
     "methods": {
       "closeDebt(address)": {
